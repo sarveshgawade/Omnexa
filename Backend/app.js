@@ -28,6 +28,9 @@ app.use(cookieParser())
 app.use(morgan('dev'))
 
 
+// test api
+app.use('/ping', (req,res) => res.send('Pong'))
+
 // api's
 // app.use('/api/v1/user',userRoutes)
 
