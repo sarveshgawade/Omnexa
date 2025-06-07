@@ -112,5 +112,24 @@ async function logout(req,res){
     }
 }
 
+async function getProfile(req,res,next){
+    try {
+        const userID = req.user.id
 
-export {register,login,logout}
+        const userProfile = await User.findById(userID)
+
+        if(!userProfile) {res.status(500).json('User not found !')}
+
+        res.status(200).json({
+            success: true ,
+            message: 'User deatils found !',
+            userProfile
+        })
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export {register,login,logout,getProfile}
