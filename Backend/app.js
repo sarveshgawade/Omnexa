@@ -3,6 +3,7 @@ import connectToDB from './config/dbConnection.js'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import userRoutes from './routes/userRoutes.js'
 
 
 // taking app instance
@@ -29,9 +30,9 @@ app.use(morgan('dev'))
 
 
 // test api
-app.use('/ping', (req,res) => res.send('Pong'))
+// app.use('/ping', (req,res) => res.send('Pong'))
 
 // api's
-// app.use('/api/v1/user',userRoutes)
+app.use('/api/v1/user',userRoutes)
 
 export default app
