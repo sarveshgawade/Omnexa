@@ -95,7 +95,7 @@ const login = async (req,res) =>{
 
 }
 
-async function logout(req,res){
+const logout =  async  (req,res) => {
     try {
         res.cookie('token',null,{
             secure: true ,
@@ -112,7 +112,7 @@ async function logout(req,res){
     }
 }
 
-async function getProfile(req,res,next){
+const getProfile = async (req,res,next) => {
     try {
         const userID = req.user.id
 
@@ -131,5 +131,37 @@ async function getProfile(req,res,next){
     }
 }
 
+const changePassword = async  (req,res) => {
+    try {
+        const {oldPassword, newPassword} = req.body
+        const userID = req.user.id
 
-export {register,login,logout,getProfile}
+        if(!oldPassword || !newPassword){return res.status(500).json('All fields are required')}
+
+        if(oldPassword == newPassword) {return res.status(500).json('Old and New password are same')}
+
+        const user = await User.findById(userID).select('+password')
+
+        if(!user) {return res.status(500).json('User not found')}
+
+        const isPasswordCorrect = await user.comparePassword(oldPassword)
+
+        if(!isPasswordCorrect){return res.status(500).json('Old  password is invalid')}
+
+        user.password = newPassword
+
+        await user.save()
+
+        user.password = undefined
+
+        res.status(200).json({
+            success: true ,
+            message: 'Password changed',
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export {register,login,logout,getProfile,changePassword}
