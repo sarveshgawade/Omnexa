@@ -1,5 +1,5 @@
 import express from 'express'
-// import connectToDB from './config/dbConnection.js'
+import connectToDB from './config/dbConnection.js'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -10,8 +10,8 @@ const app = express()
 
 
 
-// // database connection
-// connectToDB()
+// database connection
+connectToDB()
 
 
 
