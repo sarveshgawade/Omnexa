@@ -163,5 +163,40 @@ const changePassword = async  (req,res) => {
     }
 }
 
+const updateUser = async (req,res) =>{
+    const {fullName,phoneNumber,email} = req.body
+    const id = req.user.id    
 
-export {register,login,logout,getProfile,changePassword}
+    const userExists = await User.findById(id)
+
+    if(!userExists){
+        return res.status(500).json('User does not exists')
+    }
+
+    let updates = {}
+
+    if(fullName) updates.fullName = fullName ;
+    if(phoneNumber) updates.phoneNumber = phoneNumber ;
+    if(email) updates.email = email ;
+
+    const updatedUser = await User.findByIdAndUpdate(id, updates, {
+        new: true,
+        runValidators: true
+    })
+
+    if(!updatedUser){
+        return res.status(500).json('Error in updating user !')
+    }
+
+    await updatedUser.save({ validateModifiedOnly: true });
+
+
+    res.status(200).json({
+        success: true ,
+        message: `Profile changed successfully`,
+        updatedUser
+    })
+}
+
+
+export {register,login,logout,getProfile,changePassword,updateUser}

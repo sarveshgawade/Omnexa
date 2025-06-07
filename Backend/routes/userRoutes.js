@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import {register,login,logout,getProfile, changePassword} from '../controllers/userController.js'
+import {register,login,logout,getProfile, changePassword, updateUser} from '../controllers/userController.js'
 import {  authorizedRoles, isLoggedIn } from '../middlewares/authMiddleware.js'
 
 const router = Router()
@@ -9,7 +9,6 @@ router.post('/login',login)
 router.get('/profile',isLoggedIn,getProfile)
 router.get('/logout',isLoggedIn,logout)
 router.post('/change-password',isLoggedIn,changePassword)
-// router.post('/update',isLoggedIn,upload.single('avatar'),updateUser)
-// router.post('/check',isLoggedIn,authorizedRoles('ADMIN'),check)
+router.post('/update',isLoggedIn,updateUser)
 
 export default router
