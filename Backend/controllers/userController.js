@@ -95,5 +95,22 @@ const login = async (req,res) =>{
 
 }
 
+async function logout(req,res){
+    try {
+        res.cookie('token',null,{
+            secure: true ,
+            maxAge: 0 ,
+            httpOnly: true
+        })
 
-export {register,login}
+        res.status(200).json({
+            success: true ,
+            message: 'User logged out'
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export {register,login,logout}
