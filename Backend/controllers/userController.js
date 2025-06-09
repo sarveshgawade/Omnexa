@@ -13,7 +13,8 @@ const cookieOptions = {
 
 const register = catchAsync(async(req,res,next) =>{
     
-    const {fullName,email,password,phoneNumber,role} = req.body
+    try {
+        const {fullName,email,password,phoneNumber,role} = req.body
 
     if(!fullName || !email || !password || !phoneNumber){
        return next(new AppError(400,'All fields are required !'))
@@ -55,6 +56,11 @@ const register = catchAsync(async(req,res,next) =>{
         message: `User registered successfully`, 
         newUser
     })
+
+    } catch (error) {
+        console.log(error);
+        
+    }
 })
 
 const login = catchAsync(async (req,res,next) =>{
@@ -169,7 +175,8 @@ const changePassword = catchAsync(async  (req,res,next) => {
 })
 
 const updateUser = catchAsync(async (req,res) =>{
-    const {fullName,phoneNumber,email} = req.body
+    try {
+        const {fullName,phoneNumber,email} = req.body
     const id = req.user.id    
 
     const userExists = await User.findById(id)
@@ -201,6 +208,10 @@ const updateUser = catchAsync(async (req,res) =>{
         message: `Profile changed successfully`,
         updatedUser
     })
+    } catch (error) {
+        console.log(error);
+        
+    }
 })
 
 

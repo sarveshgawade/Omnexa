@@ -4,7 +4,8 @@ const productSchema = new mongoose.Schema({
     productName: {
         type : 'String' ,
         required: [true, 'Product Name is a required field !'],
-        trim : true 
+        trim : true,
+        unique: true 
     },
     productType: {
         type:'String',
@@ -12,7 +13,7 @@ const productSchema = new mongoose.Schema({
         default: 'AGRO',
         required: [true, 'Product Type is a required field !']
     },
-    productQuantity:{
+    productQuantityType:{
         type:'String',
         enum: ['KG','LTR','NOS'],
         default: 'NOS',
@@ -29,9 +30,14 @@ const productSchema = new mongoose.Schema({
         trim : true 
     },
     nutrientContent: {
-        type : 'String' ,
-        required: [true, 'Product Nutrient Content is a required field !'],
-        trim : true 
+        type: [String], 
+        required: [true, 'Product Nutrient Content is a required field!'],
+        validate: {
+            validator: function (arr) {
+                return arr.length > 0; // Ensure it's not an empty array
+            },
+            message: 'Product Nutrient Content  must have at least one item.'
+        }
     },
     isOrganic: {
         type : 'Boolean' ,

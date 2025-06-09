@@ -4,6 +4,7 @@ import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import userRoutes from './routes/userRoutes.js'
+import productRoutes from './routes/productRoutes.js'
 import errorMiddlware from './middlewares/errorMiddleware.js'
 
 
@@ -35,6 +36,7 @@ app.use(morgan('dev'))
 
 // api's
 app.use('/api/v1/user',userRoutes)
+app.use('/api/v1/product',productRoutes)
 app.use(errorMiddlware)
 
 export default app
