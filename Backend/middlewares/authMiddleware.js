@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import {config} from 'dotenv'
+import AppError from '../utils/AppError.js'
 config()
 
 async function isLoggedIn(req,res,next){
@@ -7,7 +8,7 @@ async function isLoggedIn(req,res,next){
         const {token} = req.cookies
 
         if(!token){
-            res.status(500).json('Unauthenticated user !')
+            return next(new AppError(400,'Unauthenticated user !'))
         }
 
         const userDetails = jwt.verify(token,process.env.SECRET)
@@ -28,7 +29,7 @@ const  authorizedRoles = (...roles) => async (req,res,next) =>{
     const currentRole = req.user.role
 
     if(!roles.includes(currentRole)){
-        return res.status(500).json('You cannot access this route !')
+        return next(new AppError(400,'Access restricted for this route!'))
     }
 
     next()

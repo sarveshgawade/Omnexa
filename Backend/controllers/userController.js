@@ -1,7 +1,8 @@
 import User from "../models/userModel.js"
-import cloudinary from 'cloudinary'
 import { configDotenv } from 'dotenv';
 configDotenv()
+import catchAsync from  '../utils/catchAsync.js'
+import AppError from "../utils/AppError.js";
 
 
 const cookieOptions = {
@@ -10,18 +11,18 @@ const cookieOptions = {
     secure: false
 }
 
-const register = async(req,res,) =>{
+const register = catchAsync(async(req,res,next) =>{
     
     const {fullName,email,password,phoneNumber,role} = req.body
 
     if(!fullName || !email || !password || !phoneNumber){
-       return res.status(500).json('All fields are required !') 
+       return next(new AppError(400,'All fields are required !'))
     }
 
     const userExists = await User.findOne({email})
 
-    if(userExists){
-        return res.status(500).json('User already exists !') 
+    if (userExists) {
+        return next(new AppError(400, 'User already exists!'));
     }
 
     const newUser = await User.create({
@@ -32,8 +33,8 @@ const register = async(req,res,) =>{
         phoneNumber
     })
 
-    if(!newUser){
-        return res.status(500).json('User registration failed !')
+    if (!newUser) {
+        return next(new AppError(400, 'User registration failed!'));
     }
 
     // save user in DB
@@ -54,16 +55,17 @@ const register = async(req,res,) =>{
         message: `User registered successfully`, 
         newUser
     })
-}
+})
 
-const login = async (req,res) =>{
+const login = catchAsync(async (req,res,next) =>{
     // console.log("eeeeeeeeeeeeeeeeee");
     
     try {
         const {email,password} = req.body
 
         if(!email || !password){
-            return res.status(500).json('All fields are required !') 
+            return next(new AppError(400,'All fields are required !'))
+            // return res.status(500).json() 
         }
 
         // getting password explicitly because it was selected as false in schema
@@ -72,7 +74,8 @@ const login = async (req,res) =>{
         }).select('+password')  
 
         if(!existingUser || !(await existingUser.comparePassword(password))){
-            return res.status(500).json('Email & password wont match !') 
+            return next(new AppError(400,'Email & password wont match !'))
+            // return res.status(500).json() 
         }
 
         const token = await existingUser.generateJWTtoken()
@@ -93,7 +96,7 @@ const login = async (req,res) =>{
     }
     
 
-}
+})
 
 const logout =  async  (req,res) => {
     try {
@@ -112,41 +115,43 @@ const logout =  async  (req,res) => {
     }
 }
 
-const getProfile = async (req,res,next) => {
+const getProfile = catchAsync(async (req,res,next) => {
     try {
         const userID = req.user.id
 
         const userProfile = await User.findById(userID)
 
-        if(!userProfile) {res.status(500).json('User not found !')}
+        if(!userProfile) {
+            return next(new AppError(400,'User not found'))
+        }
 
         res.status(200).json({
             success: true ,
-            message: 'User deatils found !',
+            message: 'User details found !',
             userProfile
         })
 
     } catch (error) {
         console.log(error);
     }
-}
+})
 
-const changePassword = async  (req,res) => {
+const changePassword = catchAsync(async  (req,res,next) => {
     try {
         const {oldPassword, newPassword} = req.body
         const userID = req.user.id
 
-        if(!oldPassword || !newPassword){return res.status(500).json('All fields are required')}
+        if(!oldPassword || !newPassword){return next(new AppError(400,'All fields are required !'))}
 
-        if(oldPassword == newPassword) {return res.status(500).json('Old and New password are same')}
+        if(oldPassword == newPassword) {return next(new AppError(400,'Old and New password are same'))}
 
         const user = await User.findById(userID).select('+password')
 
-        if(!user) {return res.status(500).json('User not found')}
+        if(!user) {return next(new AppError(400,'User not found'))}
 
         const isPasswordCorrect = await user.comparePassword(oldPassword)
 
-        if(!isPasswordCorrect){return res.status(500).json('Old  password is invalid')}
+        if(!isPasswordCorrect){return next(new AppError(400,'Old password is invalid'))}
 
         user.password = newPassword
 
@@ -161,16 +166,16 @@ const changePassword = async  (req,res) => {
     } catch (error) {
         console.log(error);
     }
-}
+})
 
-const updateUser = async (req,res) =>{
+const updateUser = catchAsync(async (req,res) =>{
     const {fullName,phoneNumber,email} = req.body
     const id = req.user.id    
 
     const userExists = await User.findById(id)
 
     if(!userExists){
-        return res.status(500).json('User does not exists')
+       return next(new AppError(400,'User does not exist !'))
     }
 
     let updates = {}
@@ -185,7 +190,7 @@ const updateUser = async (req,res) =>{
     })
 
     if(!updatedUser){
-        return res.status(500).json('Error in updating user !')
+        return next(new AppError(400,'Error in updating user'))
     }
 
     await updatedUser.save({ validateModifiedOnly: true });
@@ -196,7 +201,7 @@ const updateUser = async (req,res) =>{
         message: `Profile changed successfully`,
         updatedUser
     })
-}
+})
 
 
 export {register,login,logout,getProfile,changePassword,updateUser}
