@@ -165,4 +165,6 @@ const updateProduct = catchAsync( async (req,res,next) => {
         product: updatedProduct
     })
 })
+
+
 export {addProduct,deleteProduct,getAllProducts,getProduct,updateProduct}
