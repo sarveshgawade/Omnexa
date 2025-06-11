@@ -3,8 +3,7 @@ import connectToDB from './config/dbConnection.js'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import userRoutes from './routes/userRoutes.js'
-import productRoutes from './routes/productRoutes.js'
+import {userRoutes,productRoutes} from './routes/routes.index.js'
 import errorMiddlware from './middlewares/errorMiddleware.js'
 
 
