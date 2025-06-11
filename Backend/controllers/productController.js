@@ -113,4 +113,56 @@ const getProduct = catchAsync(async (req,res,next) => {
 
 })
 
-export {addProduct,deleteProduct,getAllProducts,getProduct}
+const updateProduct = catchAsync( async (req,res,next) => {
+    const {productId} = req.params
+    
+    if(!productId){
+        return next(new AppError(400,'Please provide product ID for the product to be updated !'))
+    }
+    
+    const product = await Product.findById(productId)
+    
+    if(!product){
+        return next(new AppError(400,'Product with given ID not found !'))
+    }
+    
+    let updates = {}
+    const allowedFields = [
+        "productName",
+        "productType",
+        "productQuantityType",
+        "productForm",
+        "productDescription",
+        "nutrientContent",
+        "isOrganic",
+        "keyFeatures",
+        "applications",
+        "isPremium",
+        "productImage",
+    ];
+    
+    if(!req.body){
+        return next(new AppError(400,'Provide atleast one field to be updated !'))
+    }
+
+    for(let key of allowedFields){
+        if(req.body[key] !== undefined){
+            updates[key] = req.body[key]
+        }
+    }
+
+   
+
+    const updatedProduct = await Product.findByIdAndUpdate(productId,updates, {new: true, runValidators: true})
+
+    if(!updatedProduct){
+        return next(new AppError(400,'Error while updating the product !'))
+    }
+
+    res.status(200).json({
+        success: true ,
+        message: "Product updated successfully !",
+        product: updatedProduct
+    })
+})
+export {addProduct,deleteProduct,getAllProducts,getProduct,updateProduct}
