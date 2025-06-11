@@ -10,7 +10,7 @@ const registerUserSchema = Joi.object({
 
   email: Joi.string()
     .trim()
-    .email({ tlds: { allow: false } }) // disables TLD checks like `.com`
+    .email({ tlds: { allow: false } }) 
     .required()
     .label("Email"),
 
@@ -22,7 +22,6 @@ const registerUserSchema = Joi.object({
 
   phoneNumber: Joi.string()
     .trim()
-    .pattern(/^[0-9]{10}$/) // basic 10-digit mobile number validation
     .required()
     .label("Phone Number")
     .messages({
@@ -31,7 +30,7 @@ const registerUserSchema = Joi.object({
 
   role: Joi.string()
     .valid("USER", "ADMIN")
-    .default("ADMIN")
+    .default("USER")
     .label("Role"),
 });
 
