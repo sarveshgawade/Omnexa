@@ -15,10 +15,6 @@ const register = catchAsync(async(req,res,next) =>{
     
     const {fullName,email,password,phoneNumber,role} = req.body
 
-    if(!fullName || !email || !password || !phoneNumber){
-       return next(new AppError(400,'All fields are required !'))
-    }
-
     const userExists = await User.findOne({email})
 
     if (userExists) {
@@ -56,11 +52,6 @@ const register = catchAsync(async(req,res,next) =>{
 
 const login = catchAsync(async (req,res,next) =>{
     const {email,password} = req.body
-
-    if(!email || !password){
-        return next(new AppError(400,'All fields are required !'))
-        // return res.status(500).json() 
-    }
 
     // getting password explicitly because it was selected as false in schema
     const existingUser = await User.findOne({

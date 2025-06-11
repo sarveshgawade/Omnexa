@@ -2,15 +2,15 @@ import {Router} from 'express'
 import {register,login,logout,getProfile, changePassword, updateUser} from '../controllers/userController.js'
 import {isLoggedIn } from '../middlewares/authMiddleware.js'
 import validateRequest from '../middlewares/validateRequest.js'
-import {registerUserSchema} from '../validators/user/userSchema.index.js'
+import {changePasswordUserSchema, loginUserSchema, registerUserSchema, updateUserSchema} from '../validators/user/userSchema.index.js'
 
 const router = Router()
 
 router.post('/register',validateRequest(registerUserSchema) ,register)
-router.post('/login',login)
+router.post('/login',validateRequest(loginUserSchema),login)
 router.get('/profile',isLoggedIn,getProfile)
 router.get('/logout',isLoggedIn,logout)
-router.post('/change-password',isLoggedIn,changePassword)
-router.post('/update',isLoggedIn,updateUser)
+router.post('/change-password',isLoggedIn,validateRequest(changePasswordUserSchema),changePassword)
+router.post('/update',isLoggedIn, validateRequest(updateUserSchema),updateUser)
 
 export default router
