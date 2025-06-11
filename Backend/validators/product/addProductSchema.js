@@ -1,7 +1,7 @@
 
 import Joi from 'joi'
 
-const productSchema = Joi.object({
+const addProductSchema = Joi.object({
     productName: Joi.string().required(),
     productType: Joi.string().valid('AGRO','NONAGRO').required(),
     productQuantityType: Joi.string().valid('KG','LTR','NOS').required(),
@@ -14,4 +14,4 @@ const productSchema = Joi.object({
     isPremium:Joi.boolean().required(),
 })
 
-export default productSchema ;
+export default addProductSchema ;
