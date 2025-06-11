@@ -78,4 +78,39 @@ const deleteProduct = catchAsync( async (req,res,next) => {
     
 })
 
-export {addProduct,deleteProduct}
+const getAllProducts = catchAsync(async (req,res,next) => {
+    const products = await Product.find()
+
+    if(products.length == 0){
+        return next(new AppError(400,'No Product Found !'))
+    }
+
+    return res.status(200).json({
+        success: true ,
+        message: 'Products Fetched Successfully !',
+        products
+    })
+})
+
+const getProduct = catchAsync(async (req,res,next) => {
+    const {productId} = req.params
+
+    if(!productId){
+        return next(new AppError(400,'Please provide product ID for the product to be deleted !'))
+    }
+
+    const product = await Product.findById(productId)
+
+    if(!product){
+        return next(new AppError(400,'Product with given ID not found !'))
+    }
+
+    return res.status(200).json({
+        success: true ,
+        message: 'Product found !',
+        product
+    })
+
+})
+
+export {addProduct,deleteProduct,getAllProducts,getProduct}
