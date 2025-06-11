@@ -13,8 +13,7 @@ const cookieOptions = {
 
 const register = catchAsync(async(req,res,next) =>{
     
-    try {
-        const {fullName,email,password,phoneNumber,role} = req.body
+    const {fullName,email,password,phoneNumber,role} = req.body
 
     if(!fullName || !email || !password || !phoneNumber){
        return next(new AppError(400,'All fields are required !'))
@@ -47,82 +46,59 @@ const register = catchAsync(async(req,res,next) =>{
     // put token into cookie
     res.cookie('token',token,cookieOptions) 
 
-    // console.log(token);
-    
-
     newUser.password = undefined
     res.status(200).json({
         success: true ,
         message: `User registered successfully`, 
-        newUser
+        user: newUser
     })
-
-    } catch (error) {
-        console.log(error);
-        
-    }
 })
 
 const login = catchAsync(async (req,res,next) =>{
-    // console.log("eeeeeeeeeeeeeeeeee");
-    
-    try {
-        const {email,password} = req.body
+    const {email,password} = req.body
 
-        if(!email || !password){
-            return next(new AppError(400,'All fields are required !'))
-            // return res.status(500).json() 
-        }
-
-        // getting password explicitly because it was selected as false in schema
-        const existingUser = await User.findOne({
-            email
-        }).select('+password')  
-
-        if(!existingUser || !(await existingUser.comparePassword(password))){
-            return next(new AppError(400,'Email & password wont match !'))
-            // return res.status(500).json() 
-        }
-
-        const token = await existingUser.generateJWTtoken()
-        res.cookie('token',token,cookieOptions)
-
-        existingUser.password = undefined
-        
-        res.status(200).json({
-            success: true,
-            message: `User logged in successfully`,
-            existingUser
-        })
-    } catch (e) {
-        return res.status(500).json({
-            success: false ,
-            message: e.message
-        })
+    if(!email || !password){
+        return next(new AppError(400,'All fields are required !'))
+        // return res.status(500).json() 
     }
+
+    // getting password explicitly because it was selected as false in schema
+    const existingUser = await User.findOne({
+        email
+    }).select('+password')  
+
+    if(!existingUser || !(await existingUser.comparePassword(password))){
+        return next(new AppError(400,'Email & password wont match !'))
+        // return res.status(500).json() 
+    }
+
+    const token = await existingUser.generateJWTtoken()
+    res.cookie('token',token,cookieOptions)
+
+    existingUser.password = undefined
     
+    res.status(200).json({
+        success: true,
+        message: `User logged in successfully`,
+        existingUser
+    }) 
 
 })
 
-const logout =  async  (req,res) => {
-    try {
-        res.cookie('token',null,{
-            secure: true ,
-            maxAge: 0 ,
-            httpOnly: true
-        })
+const logout =  catchAsync(async  (req,res) => {
+    res.cookie('token',null,{
+        secure: true ,
+        maxAge: 0 ,
+        httpOnly: true
+    })
 
-        res.status(200).json({
-            success: true ,
-            message: 'User logged out'
-        })
-    } catch (error) {
-        console.log(error);
-    }
-}
+    res.status(200).json({
+        success: true ,
+        message: 'User logged out'
+    })
+})
 
 const getProfile = catchAsync(async (req,res,next) => {
-    try {
         const userID = req.user.id
 
         const userProfile = await User.findById(userID)
@@ -136,47 +112,40 @@ const getProfile = catchAsync(async (req,res,next) => {
             message: 'User details found !',
             userProfile
         })
-
-    } catch (error) {
-        console.log(error);
-    }
 })
 
 const changePassword = catchAsync(async  (req,res,next) => {
-    try {
-        const {oldPassword, newPassword} = req.body
-        const userID = req.user.id
+    const {oldPassword, newPassword} = req.body
+    const userID = req.user.id
 
-        if(!oldPassword || !newPassword){return next(new AppError(400,'All fields are required !'))}
+    if(!oldPassword || !newPassword){return next(new AppError(400,'All fields are required !'))}
 
-        if(oldPassword == newPassword) {return next(new AppError(400,'Old and New password are same'))}
+    if(oldPassword == newPassword) {return next(new AppError(400,'Old and New password are same'))}
 
-        const user = await User.findById(userID).select('+password')
+    const user = await User.findById(userID).select('+password')
 
-        if(!user) {return next(new AppError(400,'User not found'))}
+    if(!user) {return next(new AppError(400,'User not found'))}
 
-        const isPasswordCorrect = await user.comparePassword(oldPassword)
+    const isPasswordCorrect = await user.comparePassword(oldPassword)
 
-        if(!isPasswordCorrect){return next(new AppError(400,'Old password is invalid'))}
+    if(!isPasswordCorrect){return next(new AppError(400,'Old password is invalid'))}
 
-        user.password = newPassword
+    user.password = newPassword
 
-        await user.save()
+    await user.save()
 
-        user.password = undefined
+    user.password = undefined
 
-        res.status(200).json({
-            success: true ,
-            message: 'Password changed',
-        })
-    } catch (error) {
-        console.log(error);
-    }
+    res.status(200).json({
+        success: true ,
+        message: 'Password changed',
+    })
+
 })
 
 const updateUser = catchAsync(async (req,res) =>{
-    try {
-        const {fullName,phoneNumber,email} = req.body
+    
+    const {fullName,phoneNumber,email} = req.body
     const id = req.user.id    
 
     const userExists = await User.findById(id)
@@ -208,10 +177,6 @@ const updateUser = catchAsync(async (req,res) =>{
         message: `Profile changed successfully`,
         updatedUser
     })
-    } catch (error) {
-        console.log(error);
-        
-    }
 })
 
 
