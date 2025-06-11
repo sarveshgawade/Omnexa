@@ -3,19 +3,19 @@ import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 
 const addProduct = catchAsync(async (req,res,next) => {
-    try {
-        const {
-            productName,
-            productType,
-            productQuantityType,
-            productForm,
-            productDescription,
-            nutrientContent,
-            isOrganic,
-            keyFeatures,
-            applications,
-            isPremium
-        } = req.body;
+    
+    const {
+        productName,
+        productType,
+        productQuantityType,
+        productForm,
+        productDescription,
+        nutrientContent,
+        isOrganic,
+        keyFeatures,
+        applications,
+        isPremium
+    } = req.body;
 
 
     const existingProduct = await Product.findOne({productName, productType})
@@ -48,16 +48,34 @@ const addProduct = catchAsync(async (req,res,next) => {
     await newProduct.save()
 
 
-    res.status(200).json({
+    res.status(201).json({
         success: true ,
         message: 'Product added successfully !',
-        newProduct
+        product : newProduct
     })
-    } catch (error) {
-        console.log(error);
-        
-    }
+    
 
 })
 
-export {addProduct}
+const deleteProduct = catchAsync( async (req,res,next) => {
+    const {productId} = req.params
+
+    if(!productId){
+        return next(new AppError(400,'Please provide product ID for the product to be deleted !'))
+    }
+
+    const deletedProduct = await Product.findByIdAndDelete(productId)
+    
+    if(!deletedProduct){
+        return next(new AppError(400,'Product with given ID not found !'))
+    }
+
+    res.status(200).json({
+         success: true ,
+         message: 'Product deleted successfully !',
+         product: deletedProduct
+    })
+    
+})
+
+export {addProduct,deleteProduct}
