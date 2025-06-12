@@ -8,3 +8,5 @@ const addQuote = catchAsync(async (req,res,next) => {
         console.log('haha');
         
 })
+
+export {addQuote}
