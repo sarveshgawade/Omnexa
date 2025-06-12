@@ -60,4 +60,24 @@ const addQuote = catchAsync(async (req,res,next) => {
         
 })
 
-export {addQuote}
+const deleteQuote = catchAsync( async (req,res,next) => {
+    const {quoteId} = req.params
+
+    if(!quoteId){
+            return next(new AppError(400,'Please provide quote ID for the quote to be deleted !'))
+        }
+
+    const deletedQuote = await Quote.findByIdAndDelete(quoteId)
+
+    if(!deletedQuote){
+        return next(new AppError(400,'Quote with given ID not found !'))
+    }
+
+    res.status(200).json({
+         success: true ,
+         message: 'Quote deleted successfully !',
+         deletedQuote: deletedQuote
+    })
+})
+
+export {addQuote,deleteQuote}
