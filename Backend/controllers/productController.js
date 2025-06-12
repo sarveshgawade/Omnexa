@@ -1,4 +1,4 @@
-import Product from "../models/productModel.js";
+import {Product} from "../models/model.index.js";
 import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 

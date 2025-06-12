@@ -1,4 +1,4 @@
-import User from "../models/userModel.js"
+import {User} from "../models/model.index.js"
 import { configDotenv } from 'dotenv';
 configDotenv()
 import catchAsync from  '../utils/catchAsync.js'
