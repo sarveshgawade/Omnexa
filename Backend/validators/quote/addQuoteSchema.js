@@ -64,7 +64,7 @@ const addQuoteSchema = Joi.object({
         .label('Delivery Location'),
 
     heardFrom: Joi.string()
-        .valid('Google', 'Friend', 'LinkedIn', 'Advertisement', 'Other')
+        .valid('Google', 'Friend', 'LinkedIn', 'Advertisement', 'Other','Instagram')
         .required()
         .label('Heard from'),
 });

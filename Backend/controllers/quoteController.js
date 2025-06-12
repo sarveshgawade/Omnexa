@@ -3,7 +3,7 @@ import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 
 const addQuote = catchAsync(async (req,res,next) => {
-    const {} = req.body
+    // const {} = req.body
 
         console.log('haha');
         
