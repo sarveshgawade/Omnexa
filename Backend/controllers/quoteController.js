@@ -3,9 +3,60 @@ import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 
 const addQuote = catchAsync(async (req,res,next) => {
-    // const {} = req.body
+    const {
+        contactPersonName,
+        companyEmail,
+        address,
+        companyName,
+        mobileNumber,
+        additionalInfo,
+        productId,
+        country,
+        requiredQty,
+        isUrgent,
+        deliveryLocation,
+        heardFrom
+    } = req.body
+    
+    const timeWindowInHours = 24;
+    const currentTime = new Date(); 
+    const windowStartTime = new Date(currentTime.getTime() - 24 * 60 * 60 * 1000);
 
-        console.log('haha');
+    const existingQuote = await Quote.findOne({
+        companyEmail,
+        productId, 
+        requiredQty , 
+        createdAt: {$gte : windowStartTime}
+    })
+
+    if(existingQuote){
+        return next(new AppError(400,'A similar quote request has already been submitted recently. Please wait before submitting again'))
+    }
+
+    const newQuote = await Quote.create({
+        contactPersonName,
+        companyEmail,
+        address,
+        companyName,
+        mobileNumber,
+        additionalInfo,
+        productId,
+        country,
+        requiredQty,
+        isUrgent,
+        deliveryLocation,
+        heardFrom
+    })
+
+    if(!newQuote){
+        return next(new AppError(400,'Error in submitting quote !'))
+    }
+
+    res.status(200).json({
+        success: true,
+        message: 'Quote submitted successfully !',
+        quote: newQuote
+    })
         
 })
 
