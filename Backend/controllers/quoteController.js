@@ -65,7 +65,7 @@ const deleteQuote = catchAsync( async (req,res,next) => {
 
     if(!quoteId){
             return next(new AppError(400,'Please provide quote ID for the quote to be deleted !'))
-        }
+    }
 
     const deletedQuote = await Quote.findByIdAndDelete(quoteId)
 
@@ -80,4 +80,38 @@ const deleteQuote = catchAsync( async (req,res,next) => {
     })
 })
 
-export {addQuote,deleteQuote}
+const getQuote = catchAsync(async (req,res,next) => {
+    const {quoteId} = req.params
+
+    if(!quoteId){
+        return next(new AppError(400,'Please provide quote ID for the quote to be deleted !'))
+    }
+
+    const quote = await Quote.findById(quoteId)
+
+    if(!quote){
+        return next(new AppError(400,'Quote with given ID not found !'))
+    }
+
+    res.status(200).json({
+        success: true ,
+        message: 'Quote found !',
+        quote
+    })
+})
+
+const getAllQuotes = catchAsync(async (req,res,next) => {
+    const quotes = await Quote.find()
+
+    if(quotes.length == 0){
+        return next(new AppError(400,'No Quote Found !'))
+    }
+
+    return res.status(200).json({
+        success: true ,
+        message: 'Quotes Fetched Successfully !',
+        quotes
+    })
+}) 
+
+export {addQuote,deleteQuote,getQuote,getAllQuotes}
