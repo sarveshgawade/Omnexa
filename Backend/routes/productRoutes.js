@@ -11,6 +11,6 @@ router.post('/add', isLoggedIn, authorizedRoles('ADMIN'),validateRequest(addProd
 router.delete('/delete/:productId', isLoggedIn, authorizedRoles('ADMIN'), deleteProduct)
 router.get('/all', getAllProducts)
 router.get('/:productId', getProduct)
-router.patch('/update/:productId', isLoggedIn, authorizedRoles('ADMIN'), validateRequest(updateProductSchema), updateProduct)
+router.patch('/update/:productId', isLoggedIn, authorizedRoles('ADMIN'), validateRequest(updateProductSchema), upload.single('productImage'),updateProduct)
 
 export default router
