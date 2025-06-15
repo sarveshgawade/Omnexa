@@ -1,7 +1,11 @@
 import {Product} from "../models/model.index.js";
 import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
+import fs from 'fs/promises'
+import cloudinary from 'cloudinary'
 
+// controller -> service --> repository/model
+// auth/authz, req, -> business --> dbrelated
 const addProduct = catchAsync(async (req,res,next) => {
     
     const {
@@ -40,6 +44,21 @@ const addProduct = catchAsync(async (req,res,next) => {
             secure_url :'Dummy'
         }
     })
+
+    if(req.file){
+        try {
+            const result = await cloudinary.v2.uploader.upload(req.file.path, {folder: 'omnexa_products'})
+
+            if(result){ 
+                newProduct.productImage.public_id = result.public_id
+                newProduct.productImage.secure_url = result.secure_url
+
+                fs.rm(`uploads/${req.file.filename}`)
+            }
+        } catch (error) {
+            return next(new AppError(400, 'Error while uploading image !'))
+        }
+    }
 
     if(!newProduct){
         return next(new AppError(400, 'Error while adding new product !'))
