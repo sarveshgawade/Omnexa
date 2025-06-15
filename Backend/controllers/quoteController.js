@@ -114,4 +114,8 @@ const getAllQuotes = catchAsync(async (req,res,next) => {
     })
 }) 
 
-export {addQuote,deleteQuote,getQuote,getAllQuotes}
+const updateQuote = catchAsync(async(req,res,next) => {
+    
+})
+
+export {addQuote,deleteQuote,getQuote,getAllQuotes,updateQuote}
