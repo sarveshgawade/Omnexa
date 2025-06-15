@@ -10,6 +10,6 @@ router.post('/add', isLoggedIn, authorizedRoles('USER','ADMIN'), validateRequest
 router.delete('/delete/:quoteId', isLoggedIn, authorizedRoles('ADMIN'),deleteQuote )
 router.get('/all', isLoggedIn, authorizedRoles('ADMIN'),getAllQuotes )
 router.get('/:quoteId', isLoggedIn, authorizedRoles('ADMIN','USER'),getQuote )
-router.patch('update/:quoteId', isLoggedIn, authorizedRoles('ADMIN'),validateRequest(updateQuoteSchema),updateQuote )
+router.patch('/update/:quoteId', isLoggedIn, authorizedRoles('ADMIN'),validateRequest(updateQuoteSchema),updateQuote )
 
 export default router

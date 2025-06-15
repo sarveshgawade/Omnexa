@@ -26,8 +26,7 @@ const quoteSchema = new mongoose.Schema({
     mobileNumber: {
         type: 'String',
         required: [true, 'Mobile Number is a required field!'],
-        trim: true,
-        match: [/^[0-9]{10,15}$/, 'Please enter a valid mobile number']
+        trim: true
     },
     additionalInfo: {
         type: 'String',

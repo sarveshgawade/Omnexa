@@ -115,7 +115,55 @@ const getAllQuotes = catchAsync(async (req,res,next) => {
 }) 
 
 const updateQuote = catchAsync(async(req,res,next) => {
+    const {quoteId} = req.params
     
+    if(!quoteId){
+        return next(new AppError(400,'Please provide quote ID for the quote to be updated !'))
+    }
+
+    const quote = await Quote.findById(quoteId)
+
+    if(!quote){
+        return next(new AppError(400,'Quote with given ID not found !'))
+    }
+
+    let updates = {}
+    const allowedFields = [
+        "contactPersonName",
+        "companyEmail",
+        "address",
+        "companyName",
+        "mobileNumber",
+        "additionalInfo",
+        "productId",
+        "country",
+        "requiredQty",
+        "isUrgent",
+        "deliveryLocation",
+        "heardFrom"
+    ];
+    
+    if(!req.body){
+        return next(new AppError(400,'Provide atleast one field to be updated !'))
+    }
+
+    for(let key of allowedFields){
+        if(req.body[key] !== undefined){
+            updates[key] = req.body[key]
+        }
+    }
+
+    const updatedQuote = await Quote.findByIdAndUpdate(quoteId,updates,{new:true, runValidators:true})
+
+    if(!updatedQuote){
+        return next(new AppError(400,'Error while updating the quote !'))
+    }
+
+    res.status(200).json({
+        success: true ,
+        message: "Quote updated successfully !",
+        quote: updatedQuote
+    })
 })
 
 export {addQuote,deleteQuote,getQuote,getAllQuotes,updateQuote}

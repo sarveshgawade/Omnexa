@@ -22,7 +22,6 @@ const updateQuoteSchema = Joi.object({
 
     mobileNumber: Joi.string()
         .trim()
-        .pattern(/^[0-9]{10,15}$/)
         .label('Mobile Number'),
 
     additionalInfo: Joi.string()
