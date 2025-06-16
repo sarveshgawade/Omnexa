@@ -3,6 +3,7 @@ import { configDotenv } from 'dotenv';
 configDotenv()
 import catchAsync from  '../utils/catchAsync.js'
 import AppError from "../utils/AppError.js";
+import sendEmail from "../utils/sendEmail.js";
 
 
 const cookieOptions = {
@@ -41,6 +42,21 @@ const register = catchAsync(async(req,res,next) =>{
 
     // put token into cookie
     res.cookie('token',token,cookieOptions) 
+
+    try {
+        const html = `
+            <h2>Welcome, ${fullName}!</h2>
+            <p>Thanks for registering. We're excited to have you onboard!</p>
+        `;
+
+        await sendEmail({
+            to: email,
+            subject: "Welcome to Our Platform!",
+            html
+        });
+    } catch (error) {
+        return next(new AppError(400, 'Error in sending email!'));
+    }
 
     newUser.password = undefined
     res.status(200).json({
