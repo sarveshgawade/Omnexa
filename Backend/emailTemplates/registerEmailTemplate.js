@@ -29,12 +29,9 @@ export const registerEmailTemplate = (userName) => {
   <div style="background-color:#f0f0f0; padding:20px; text-align:left; font-size:14px; color:#444;">
     <p style="margin:0; font-weight:bold;">Warm regards,</p>
     <p style="margin:4px 0;">Team Omnexa Global Trade</p>
-    <p style="margin:4px 0;">📧 <a href="mailto:info@omnexaglobal.com" style="color:#0066cc;">info@omnexaglobal.com</a></p>
+    <p style="margin:4px 0;">📧 <a href="mailto:aditya.jagtap@omnexaglobal.com style="color:#0066cc;">aditya.jagtap@omnexaglobal.com</a></p>
     <p style="margin:4px 0;">🌐 <a href="https://www.omnexaglobal.com" style="color:#0066cc;" target="_blank">www.omnexaglobal.com</a></p>
     <br />
-    <p style="margin:4px 0;"><strong>Aditya Jagtap</strong></p>
-    <p style="margin:0;">Founder & CEO, Omnexa Global Trade</p>
-    <p style="margin:4px 0;">📧 <a href="mailto:aditya.jagtap@omnexaglobal.com" style="color:#0066cc;">aditya.jagtap@omnexaglobal.com</a></p>
   </div>
 </div>
 

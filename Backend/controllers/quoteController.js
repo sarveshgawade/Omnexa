@@ -1,6 +1,8 @@
-import {Quote} from "../models/model.index.js";
+import { quoteEmailTemplate } from "../emailTemplates/quoteEmailTemplate.js";
+import {Product, Quote} from "../models/model.index.js";
 import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
+import sendEmail from "../utils/sendEmail.js";
 
 const addQuote = catchAsync(async (req,res,next) => {
     const {
@@ -47,6 +49,42 @@ const addQuote = catchAsync(async (req,res,next) => {
         deliveryLocation,
         heardFrom
     })
+
+    try {
+
+        const product = await Product.findById(productId)
+
+        const quoteDetails = {
+            contactPersonName,
+            companyEmail,
+            address,
+            companyName,
+            mobileNumber,
+            additionalInfo,
+            productId,
+            country,
+            requiredQty,
+            isUrgent,
+            deliveryLocation,
+            heardFrom
+        }
+
+        if(product){
+            quoteDetails.productName = product.productName
+        }
+
+        const html = quoteEmailTemplate(quoteDetails)
+
+        await sendEmail({
+            to: "aditya.jagtap@omnexaglobaltrade.com , adityajagtap095376@gmail.com",
+            subject: "New Quote Received !",
+            html
+        });
+    } catch (error) {
+        console.log(error);
+        
+        return next(new AppError(400,'Error in sending email for quote!'))
+    }
 
     if(!newQuote){
         return next(new AppError(400,'Error in submitting quote !'))

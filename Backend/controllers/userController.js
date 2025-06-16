@@ -49,11 +49,11 @@ const register = catchAsync(async(req,res,next) =>{
 
         await sendEmail({
             to: email,
-            subject: "Welcome to Our Platform!",
+            subject: "Welcome to Omnexa Global Trade.",
             html
         });
     } catch (error) {
-        return next(new AppError(400, 'Error in sending email!'));
+        return next(new AppError(400, 'Error in sending email for user!'));
     }
 
     newUser.password = undefined
