@@ -4,6 +4,7 @@ configDotenv()
 import catchAsync from  '../utils/catchAsync.js'
 import AppError from "../utils/AppError.js";
 import sendEmail from "../utils/sendEmail.js";
+import { registerEmailTemplate } from "../emailTemplates/registerEmailTemplate.js";
 
 
 const cookieOptions = {
@@ -44,10 +45,7 @@ const register = catchAsync(async(req,res,next) =>{
     res.cookie('token',token,cookieOptions) 
 
     try {
-        const html = `
-            <h2>Welcome, ${fullName}!</h2>
-            <p>Thanks for registering. We're excited to have you onboard!</p>
-        `;
+        const html = registerEmailTemplate(fullName)
 
         await sendEmail({
             to: email,
