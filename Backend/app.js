@@ -29,6 +29,10 @@ app.use(cors(corsOptions))
 app.use(cookieParser())
 app.use(morgan('dev'))
 
+app.get('/api/hello', (req, res) => {
+  res.json({ message: 'Hello from Vercel API' });
+});
+
 
 // api's
 app.use('/api/v1/user',userRoutes)
