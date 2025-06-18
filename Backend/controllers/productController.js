@@ -54,7 +54,7 @@ const addProduct = catchAsync(async (req,res,next) => {
                 fs.rm(`uploads/${req.file.filename}`)
             }
         } catch (error) {
-            return next(new AppError(400, 'Error while uploading image !'))
+            console.log( 'Error while uploading image ' , error.message)
         }
     }
 
@@ -183,7 +183,7 @@ const updateProduct = catchAsync( async (req,res,next) => {
                 fs.rm(`uploads/${req.file.filename}`)
             }
         } catch (error) {
-            return next(new AppError(400, 'Error while uploading image !'))
+            console.log( 'Error while uploading image ' , error.message)
         }
     }
 

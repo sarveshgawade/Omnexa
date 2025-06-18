@@ -6,7 +6,7 @@ const addProductSchema = Joi.object({
     productQuantityType: Joi.string().valid('KG','LTR','NOS').required().label("Product Quantity Type"),
     productForm :Joi.string().required().label("Product Form"),
     productDescription:Joi.string().required().label("Product Description"),
-    nutrientContent:Joi.array().items(Joi.string()).min(1).required().label("Nutrient Content"),
+    nutrientContent:Joi.array().items(Joi.string()).label("Nutrient Content"),
     isOrganic: Joi.boolean().required().label("Is Organic"),
     keyFeatures: Joi.array().items(Joi.string()).min(1).required().label("Key Features"),
     applications: Joi.array().items(Joi.string()).min(1).required().label("Applications"),

@@ -30,13 +30,15 @@ const productSchema = new mongoose.Schema({
         trim : true 
     },
     nutrientContent: {
-        type: [String], 
-        required: [true, 'Product Nutrient Content is a required field!'],
+        type: [String],
+        required: function () {
+            return this.productType === 'AGRO';
+        },
         validate: {
             validator: function (arr) {
-                return arr.length > 0; // Ensure it's not an empty array
+            return this.productType !== 'AGRO' || arr.length > 0;
             },
-            message: 'Product Nutrient Content  must have at least one item.'
+            message: 'Nutrient content must have at least one item for AGRO products.'
         }
     },
     isOrganic: {
