@@ -31,10 +31,7 @@ app.use(cookieParser())
 app.use(morgan('dev'))
 
 
-// test api's
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from Vercel API' });
-});
+// test api
 app.get('/', (req, res) => {
   res.json({ message: 'Homepage' });
 });
