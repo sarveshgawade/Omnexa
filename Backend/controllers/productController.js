@@ -2,10 +2,11 @@ import {Product} from "../models/model.index.js";
 import AppError from "../utils/AppError.js";
 import catchAsync from "../utils/catchAsync.js";
 import fs from 'fs/promises'
-import cloudinary from 'cloudinary'
+// import cloudinary from 'cloudinary'
+import {uploadToCloudinary} from '../middlewares/multerMiddleware.js'
 
-const addProduct = catchAsync(async (req,res,next) => {
-    
+const addProduct = catchAsync(async (req, res, next) => {
+
     const {
         productName,
         productType,
@@ -19,11 +20,27 @@ const addProduct = catchAsync(async (req,res,next) => {
         isPremium
     } = req.body;
 
+    const existingProduct = await Product.findOne({ productName, productType });
 
-    const existingProduct = await Product.findOne({productName, productType})
+    if (existingProduct) {
+        return next(new AppError(400, 'Product with given name and type already exists'));
+    }
 
-    if(existingProduct){
-        return next(new AppError(400, 'Product with given name and type already exists'))
+    let uploadedImage = {
+        public_id: 'Dummy',
+        secure_url: 'Dummy'
+    };
+
+    if (req.file) {
+        try {
+            const result = await uploadToCloudinary(req.file.buffer, 'omnexa_products');
+
+            uploadedImage.public_id = result.public_id;
+            uploadedImage.secure_url = result.secure_url;
+
+        } catch (error) {
+            console.error('Error while uploading image:', error.message);
+        }
     }
 
     const newProduct = await Product.create({
@@ -37,42 +54,17 @@ const addProduct = catchAsync(async (req,res,next) => {
         keyFeatures,
         applications,
         isPremium,
-        productImage:{
-            public_id :'Dummy',
-            secure_url :'Dummy'
-        }
-    })
-
-    if(req.file){
-        try {
-            const result = await cloudinary.v2.uploader.upload(req.file.path, {folder: 'omnexa_products'})
-
-            if(result){ 
-                newProduct.productImage.public_id = result.public_id
-                newProduct.productImage.secure_url = result.secure_url
-
-                fs.rm(`uploads/${req.file.filename}`)
-            }
-        } catch (error) {
-            console.log( 'Error while uploading image ' , error.message)
-        }
-    }
-
-    if(!newProduct){
-        return next(new AppError(400, 'Error while adding new product !'))
-    }
-
-    await newProduct.save()
-
+        productImage: uploadedImage
+    });
 
     res.status(201).json({
-        success: true ,
-        message: 'Product added successfully !',
-        product : newProduct
-    })
-    
+        success: true,
+        message: 'Product added successfully!',
+        product: newProduct
+    });
 
-})
+});
+
 
 const deleteProduct = catchAsync( async (req,res,next) => {
     const {productId} = req.params

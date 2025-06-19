@@ -3,7 +3,7 @@ import { addProduct, deleteProduct, getAllProducts, getProduct, updateProduct } 
 import validateRequest from "../middlewares/validateRequest.js";
 import {addProductSchema, updateProductSchema} from '../validators/product/productValidatorSchema.index.js'
 import {isLoggedIn, authorizedRoles} from '../middlewares/authMiddleware.js'
-import upload from '../middlewares/multerMiddleware.js'
+import {upload} from '../middlewares/multerMiddleware.js'
 
 const router = Router()
 
