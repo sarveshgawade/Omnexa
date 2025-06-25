@@ -1,18 +1,18 @@
 import BaseLayout from '@/layouts/BaseLayout'
-import React from 'react'
-
-// import Image from "next/image"
+import React, { useEffect } from 'react'
 import {Link} from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Leaf, Globe, Shield, Truck, Award, Users } from "lucide-react"
 import jaggery from '../assets/jaggery.jpeg'
 import friedOnion from '../assets/friedOnion.jpeg'
-
+import axiosInstance from '@/helpers/axiosInstance'
 
 function Homepage() {
+
   return (
     <BaseLayout>
+    
         <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-green-800 to-green-600 text-white py-20">
@@ -87,23 +87,18 @@ function Homepage() {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="relative h-100">
-                <img
-                  src={jaggery}
-                  alt="Natural Jaggery"
-                  className="object-cover w-full h-full"
+          <div className="flex flex-wrap justify-center gap-y-10 gap-x-12 ">
+  <Card className="overflow-hidden hover:shadow-xl transition-shadow max-w-sm">
 
-                />
+              <div className="relative h-64">
+                <img src={jaggery} alt="Natural Jaggery" className="object-cover w-full h-full" />
               </div>
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Natural Jaggery</h3>
-                <p className="text-gray-600 mb-6">
-                  Pure, unrefined sweetener made from sugarcane. Rich in minerals and perfect for health-conscious
-                  consumers and food processing industries.
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Natural Jaggery</h3>
+                <p className="text-gray-600 mb-4 text-sm">
+                  Pure, unrefined sweetener made from sugarcane. Rich in minerals and perfect for health-conscious consumers and food processing industries.
                 </p>
-                <ul className="text-sm text-gray-600 mb-6 space-y-2">
+                <ul className="text-sm text-gray-600 mb-4 space-y-1">
                   <li>• 100% Natural & Organic</li>
                   <li>• Rich in Iron & Minerals</li>
                   <li>• Multiple packaging options</li>
@@ -115,28 +110,51 @@ function Homepage() {
               </CardContent>
             </Card>
 
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="relative h-100">
-                <img src={friedOnion} alt="Fried Onions"  className="object-cover  w-full h-full" />
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow max-w-sm">
+              <div className="relative h-64">
+                <img src={jaggery} alt="Natural Jaggery" className="object-cover w-full h-full" />
               </div>
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Crispy Fried Onions</h3>
-                <p className="text-gray-600 mb-6">
-                  Premium quality fried onions with perfect crispiness. Ideal for restaurants, food processing, and
-                  culinary applications worldwide.
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Natural Jaggery</h3>
+                <p className="text-gray-600 mb-4 text-sm">
+                  Pure, unrefined sweetener made from sugarcane. Rich in minerals and perfect for health-conscious consumers and food processing industries.
                 </p>
-                <ul className="text-sm text-gray-600 mb-6 space-y-2">
-                  <li>• Perfect Golden Crispiness</li>
-                  <li>• Extended Shelf Life</li>
-                  <li>• Hygienic Processing</li>
-                  <li>• Bulk & Retail Packaging</li>
+                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                  <li>• 100% Natural & Organic</li>
+                  <li>• Rich in Iron & Minerals</li>
+                  <li>• Multiple packaging options</li>
+                  <li>• FSSAI Certified</li>
                 </ul>
                 <Button asChild className="bg-green-700 hover:bg-green-800">
-                  <Link to="/products/fried-onions">Learn More</Link>
+                  <Link to="/products/jaggery">Learn More</Link>
                 </Button>
               </CardContent>
             </Card>
+            <Card className="overflow-hidden hover:shadow-xl transition-shadow max-w-sm">
+              <div className="relative h-64">
+                <img src={jaggery} alt="Natural Jaggery" className="object-cover w-full h-full" />
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Natural Jaggery</h3>
+                <p className="text-gray-600 mb-4 text-sm">
+                  Pure, unrefined sweetener made from sugarcane. Rich in minerals and perfect for health-conscious consumers and food processing industries.
+                </p>
+                <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                  <li>• 100% Natural & Organic</li>
+                  <li>• Rich in Iron & Minerals</li>
+                  <li>• Multiple packaging options</li>
+                  <li>• FSSAI Certified</li>
+                </ul>
+                <Button asChild className="bg-green-700 hover:bg-green-800">
+                  <Link to="/products/jaggery">Learn More</Link>
+                </Button>
+              </CardContent>
+            </Card>
+
+
+
           </div>
+
         </div>
       </section>
 

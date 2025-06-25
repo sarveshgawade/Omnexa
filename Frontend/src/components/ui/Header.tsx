@@ -9,7 +9,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-white shadow-sm border-b ">
       {/* Top Bar */}
       <div className="bg-green-800 text-white py-2">
         <div className="container mx-auto px-4">

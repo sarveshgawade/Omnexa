@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import './App.css'
 import Homepage from './pages/Homepage'
 import { Route, Routes } from 'react-router-dom'
@@ -8,9 +7,7 @@ import ContactPage from './pages/ContactPage'
 import PageNotFoundPage from './pages/PageNotFoundPage'
 import QuotePage from './pages/QuotePage'
 
-
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     // <Homepage />
