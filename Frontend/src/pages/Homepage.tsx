@@ -7,8 +7,13 @@ import { Leaf, Globe, Shield, Truck, Award, Users } from "lucide-react"
 import jaggery from '../assets/jaggery.jpeg'
 import friedOnion from '../assets/friedOnion.jpeg'
 import axiosInstance from '@/helpers/axiosInstance'
+import { toast } from 'sonner'
 
 function Homepage() {
+
+  useEffect(()=> {
+    toast.success('Welcome')
+  },[])
 
   return (
     <BaseLayout>
