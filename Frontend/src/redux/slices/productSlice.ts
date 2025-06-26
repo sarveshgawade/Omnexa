@@ -1,20 +1,24 @@
 import axiosInstance from "@/helpers/axiosInstance";
+import type { Product } from "@/types/product.types";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import {toast} from 'sonner'
 
-const initialState = {
-    products: []
+interface ProductState{
+    products: Product[],
+    productDetails: Product | null
+}
+
+const initialState : ProductState = {
+    products: [],
+    productDetails : null
 }
 
 export const getAllProducts = createAsyncThunk('/products/get' , async function () {
     try {
         const response = axiosInstance.get('/api/v1/product/all')
 
-        console.log((await response).data);
-
         toast.promise(response, {
             loading: 'Loading...',
-            success: (await response)?.data?.message,
             error: 'Error in Loading Products ',
         });
 
@@ -25,6 +29,23 @@ export const getAllProducts = createAsyncThunk('/products/get' , async function 
     }
 })
 
+export const getProduct = createAsyncThunk('/product/get', async function (productId) {
+    try {
+        const response = axiosInstance.get(`/api/v1/product/${productId}`)
+
+        toast.promise(response, {
+            loading: 'Loading...',
+            error: `Error in Loading Product with ID: ${productId}`,
+        });
+
+        return (await response)?.data?.product
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+})
+
 const productSlice = createSlice({
     name: 'products',
     initialState,
@@ -32,8 +53,14 @@ const productSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(getAllProducts.fulfilled, (state,action) => {
-                if(action.payload){
+                if(action?.payload){
                     state.products = action?.payload
+                }
+            })
+
+            .addCase(getProduct.fulfilled, (state,action) => {
+                if(action?.payload){
+                    state.productDetails = action?.payload
                 }
             })
     }

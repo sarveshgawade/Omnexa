@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 // import Image from "next/image"
 import { Link } from 'react-router-dom'
 import { Button } from "@/components/ui/button"
@@ -6,8 +6,28 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Leaf, Shield, Award, Package } from "lucide-react"
 import BaseLayout from '@/layouts/BaseLayout'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllProducts } from '@/redux/slices/productSlice'
+import type { AppDispatch, RootState } from '@/redux/store'
+import type { Product } from '@/types/product.types'
+import ProductCard from '@/components/ui/productCard'
 
 function ProductsPage() {
+
+    const dispatch = useDispatch<AppDispatch>()
+    const {products} : {products: Product[]}= useSelector((state:RootState) => state.products) 
+
+    async function loadProducts() {
+
+      if(!products || products.length == 0){
+        dispatch(getAllProducts())
+      }
+    }
+
+    useEffect(()=> {
+      loadProducts()
+    },[dispatch,products])
+
   return (
     <BaseLayout>
         <div className="min-h-screen">
@@ -26,118 +46,16 @@ function ProductsPage() {
 
       {/* Product Categories */}
       <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Natural Jaggery */}
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="relative h-80">
-                <img
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Natural Jaggery"
-                  className="object-cover"
-                />
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-green-700">Premium Quality</Badge>
-                </div>
-              </div>
-              <CardContent className="p-8">
-                <div className="flex items-center space-x-2 mb-4">
-                  <Leaf className="w-6 h-6 text-green-700" />
-                  <h2 className="text-3xl font-bold text-gray-900">Natural Jaggery</h2>
-                </div>
-
-                <p className="text-gray-600 mb-6">
-                  Pure, unrefined sweetener made from fresh sugarcane juice. Rich in minerals and perfect for
-                  health-conscious consumers, food processing industries, and traditional cooking applications.
-                </p>
-
-                <div className="grid md:grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Key Features:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• 100% Natural & Organic</li>
-                      <li>• Rich in Iron & Minerals</li>
-                      <li>• No Chemical Processing</li>
-                      <li>• Traditional Production Methods</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Applications:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• Food & Beverage Industry</li>
-                      <li>• Health Food Products</li>
-                      <li>• Traditional Cooking</li>
-                      <li>• Confectionery Manufacturing</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button asChild className="bg-green-700 hover:bg-green-800">
-                    <Link to="/products/jaggery">View Details</Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link to="/contact">Request Quote</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Fried Onions */}
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="relative h-80">
-                <img
-                  src="/placeholder.svg?height=400&width=600"
-                  alt="Crispy Fried Onions"
-                  className="object-cover"
-                />
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-amber-600">Restaurant Grade</Badge>
-                </div>
-              </div>
-              <CardContent className="p-8">
-                <div className="flex items-center space-x-2 mb-4">
-                  <Package className="w-6 h-6 text-amber-600" />
-                  <h2 className="text-3xl font-bold text-gray-900">Crispy Fried Onions</h2>
-                </div>
-
-                <p className="text-gray-600 mb-6">
-                  Premium quality fried onions with perfect golden crispiness and extended shelf life. Ideal for
-                  restaurants, food processing, culinary applications, and ready-to-eat food products.
-                </p>
-
-                <div className="grid md:grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Key Features:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• Perfect Golden Crispiness</li>
-                      <li>• Extended Shelf Life</li>
-                      <li>• Hygienic Processing</li>
-                      <li>• Consistent Quality</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">Applications:</h4>
-                    <ul className="text-sm text-gray-600 space-y-1">
-                      <li>• Restaurant & Catering</li>
-                      <li>• Food Processing</li>
-                      <li>• Ready-to-Eat Products</li>
-                      <li>• Culinary Garnishing</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button asChild className="bg-amber-600 hover:bg-amber-700">
-                    <Link to="/products/fried-onions">View Details</Link>
-                  </Button>
-                  <Button asChild variant="outline">
-                    <Link to="/contact">Request Quote</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="flex flex-wrap justify-center gap-y-10 gap-x-12">
+            {
+              products.map((product) =>
+                (
+                  
+                  <ProductCard product={product}  key={product?._id}/>
+                  
+                )
+              )
+            }
         </div>
       </section>
 

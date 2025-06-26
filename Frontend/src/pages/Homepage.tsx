@@ -2,14 +2,13 @@ import BaseLayout from '@/layouts/BaseLayout'
 import  { useEffect } from 'react'
 import {Link} from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Leaf, Globe, Shield, Truck, Award, Users } from "lucide-react"
 import {useDispatch, useSelector} from 'react-redux'
 import { getAllProducts } from '@/redux/slices/productSlice'
 import type { AppDispatch } from '@/redux/store'
 import type { RootState } from '@/redux/store'
 import type { Product } from '../types/product.types'
-
+import ProductCard from '@/components/ui/productCard'
 
 function Homepage() {
 
@@ -17,14 +16,22 @@ function Homepage() {
   const {products} : {products: Product[]}= useSelector((state:RootState) => state.products) 
 
   async function loadProducts() {
-    await dispatch(getAllProducts())
+    if(!products || products.length == 0){
+      dispatch(getAllProducts())
+    }
   }
 
   useEffect(()=> {
     loadProducts()
-    
-    
   },[])
+
+  function getPremiumProductsCount(){
+    let count = 0
+
+    products.map(product => product.isPremium ? count = count + 1 : count = count + 0 )
+
+    return count
+  }
 
   return (
     <BaseLayout>
@@ -78,7 +85,7 @@ function Homepage() {
               <div className="text-gray-600">Founded</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-green-800 mb-2">2</div>
+              <div className="text-3xl font-bold text-green-800 mb-2">{getPremiumProductsCount()}</div>
               <div className="text-gray-600">Premium Products</div>
             </div>
             <div>
@@ -107,38 +114,9 @@ function Homepage() {
             {
               products.map((product) =>
                 product?.isPremium && (
-                  <Card
-                    className="w-[300px] h-[500px] overflow-hidden hover:shadow-xl transition-shadow flex flex-col p-0"
-                    key={product._id}
-                  >
-                    {/* Remove all spacing above this image */}
-                    <div className="w-full h-64 overflow-hidden">
-                      <img
-                        src={product?.productImage?.secure_url}
-                        alt={product?.productName}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    {/* No extra margin here; clean layout */}
-                    <CardContent className="p-6 flex flex-col flex-1 justify-between">
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-3">
-                          {product?.productName}
-                        </h3>
-                        <ul className="text-sm text-gray-600 mb-4 space-y-1">
-                          {product.keyFeatures.slice(0, 2).map((feature, index) => (
-                            <li key={index}>• {feature}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <Button asChild className="bg-green-700 hover:bg-green-800 w-full">
-                        <Link to={`/products/${product._id}`}>Learn More</Link>
-                      </Button>
-                    </CardContent>
-                  </Card>
-
+                  
+                  <ProductCard product={product}  key={product?._id}/>
+                  
                 )
               )
             }
