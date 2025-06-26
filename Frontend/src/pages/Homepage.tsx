@@ -4,15 +4,26 @@ import {Link} from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Leaf, Globe, Shield, Truck, Award, Users } from "lucide-react"
-import jaggery from '../assets/jaggery.jpeg'
-import friedOnion from '../assets/friedOnion.jpeg'
-import axiosInstance from '@/helpers/axiosInstance'
-import { toast } from 'sonner'
+import {useDispatch, useSelector} from 'react-redux'
+import { getAllProducts } from '@/redux/slices/productSlice'
+import type { AppDispatch } from '@/redux/store'
+import type { RootState } from '@/redux/store'
+import type { Product } from '../types/product.types'
+
 
 function Homepage() {
 
+  const dispatch = useDispatch<AppDispatch>()
+  const {products} : {products: Product[]}= useSelector((state:RootState) => state.products) 
+
+  async function loadProducts() {
+    await dispatch(getAllProducts())
+  }
+
   useEffect(()=> {
-    toast.success('Welcome')
+    loadProducts()
+    
+    
   },[])
 
   return (
@@ -92,73 +103,48 @@ function Homepage() {
             </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-y-10 gap-x-12 ">
-  <Card className="overflow-hidden hover:shadow-xl transition-shadow max-w-sm">
+         <div className="flex flex-wrap justify-center gap-y-10 gap-x-12">
+            {
+              products.map((product) =>
+                product?.isPremium && (
+                  <Card
+                    className="w-[300px] h-[500px] overflow-hidden hover:shadow-xl transition-shadow flex flex-col p-0"
+                    key={product._id}
+                  >
+                    {/* Remove all spacing above this image */}
+                    <div className="w-full h-64 overflow-hidden">
+                      <img
+                        src={product?.productImage?.secure_url}
+                        alt={product?.productName}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
 
-              <div className="relative h-64">
-                <img src={jaggery} alt="Natural Jaggery" className="object-cover w-full h-full" />
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Natural Jaggery</h3>
-                <p className="text-gray-600 mb-4 text-sm">
-                  Pure, unrefined sweetener made from sugarcane. Rich in minerals and perfect for health-conscious consumers and food processing industries.
-                </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1">
-                  <li>• 100% Natural & Organic</li>
-                  <li>• Rich in Iron & Minerals</li>
-                  <li>• Multiple packaging options</li>
-                  <li>• FSSAI Certified</li>
-                </ul>
-                <Button asChild className="bg-green-700 hover:bg-green-800">
-                  <Link to="/products/jaggery">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
+                    {/* No extra margin here; clean layout */}
+                    <CardContent className="p-6 flex flex-col flex-1 justify-between">
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-3">
+                          {product?.productName}
+                        </h3>
+                        <ul className="text-sm text-gray-600 mb-4 space-y-1">
+                          {product.keyFeatures.slice(0, 2).map((feature, index) => (
+                            <li key={index}>• {feature}</li>
+                          ))}
+                        </ul>
+                      </div>
 
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow max-w-sm">
-              <div className="relative h-64">
-                <img src={jaggery} alt="Natural Jaggery" className="object-cover w-full h-full" />
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Natural Jaggery</h3>
-                <p className="text-gray-600 mb-4 text-sm">
-                  Pure, unrefined sweetener made from sugarcane. Rich in minerals and perfect for health-conscious consumers and food processing industries.
-                </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1">
-                  <li>• 100% Natural & Organic</li>
-                  <li>• Rich in Iron & Minerals</li>
-                  <li>• Multiple packaging options</li>
-                  <li>• FSSAI Certified</li>
-                </ul>
-                <Button asChild className="bg-green-700 hover:bg-green-800">
-                  <Link to="/products/jaggery">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow max-w-sm">
-              <div className="relative h-64">
-                <img src={jaggery} alt="Natural Jaggery" className="object-cover w-full h-full" />
-              </div>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Natural Jaggery</h3>
-                <p className="text-gray-600 mb-4 text-sm">
-                  Pure, unrefined sweetener made from sugarcane. Rich in minerals and perfect for health-conscious consumers and food processing industries.
-                </p>
-                <ul className="text-sm text-gray-600 mb-4 space-y-1">
-                  <li>• 100% Natural & Organic</li>
-                  <li>• Rich in Iron & Minerals</li>
-                  <li>• Multiple packaging options</li>
-                  <li>• FSSAI Certified</li>
-                </ul>
-                <Button asChild className="bg-green-700 hover:bg-green-800">
-                  <Link to="/products/jaggery">Learn More</Link>
-                </Button>
-              </CardContent>
-            </Card>
+                      <Button asChild className="bg-green-700 hover:bg-green-800 w-full">
+                        <Link to={`/products/${product._id}`}>Learn More</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                )
+              )
+            }
+        </div>
 
 
-
-          </div>
 
         </div>
       </section>

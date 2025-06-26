@@ -1,6 +1,7 @@
 import {combineReducers, configureStore} from '@reduxjs/toolkit'
 import storage from 'redux-persist/lib/storage'
 import {persistReducer} from 'redux-persist'
+import productSliceReducer from './slices/productSlice'
 
 
 const persistConfiguration = {
@@ -11,6 +12,8 @@ const persistConfiguration = {
 
 const reducer = combineReducers({
     // slices
+    products: productSliceReducer ,
+
 
 })
 
@@ -21,4 +24,6 @@ const store = configureStore({
     devTools: true
 })
 
+export type RootState = ReturnType<typeof store.getState>
+export type AppDispatch = typeof store.dispatch
 export default store
