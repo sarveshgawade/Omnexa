@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Phone, Mail } from "lucide-react"
+import { Menu, X, Phone, Mail, UserPlus,LogOut  } from "lucide-react"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -61,9 +61,20 @@ export default function Header() {
             <Link to="/contact" className="text-gray-700 hover:text-green-700 font-medium">
               Contact
             </Link>
-            <Button asChild className="bg-green-700 hover:bg-green-800">
-              <Link to="/quote">Get Quote</Link>
+            <Button asChild className="bg-green-700 hover:bg-green-800 gap-2">
+              <Link to="/login" className="flex items-center">
+                <UserPlus className="w-4 h-4" />
+                  Login
+              </Link>
             </Button>
+            <Button
+              onClick={()=> ""} // replace with your logout function
+              className="bg-red-500 hover:bg-red-600 gap-2"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </Button>
+
           </nav>
 
           {/* Mobile Menu Button */}

@@ -7,6 +7,8 @@ import ContactPage from './pages/ContactPage'
 import PageNotFoundPage from './pages/PageNotFoundPage'
 import QuotePage from './pages/QuotePage'
 import ProductDescription from './pages/ProductDescription'
+import RegisterPage from './pages/RegisterPage'
+import LoginPage from './pages/LoginPage'
 
 function App() {
 
@@ -21,6 +23,8 @@ function App() {
         <Route path='/contact' element={ <ContactPage/>}/>
         <Route path='/quote' element={ <QuotePage/>}/>
         <Route path='/products/description' element={ <ProductDescription/>}/>
+        <Route path='/register' element={ <RegisterPage/>}/>
+        <Route path='/login' element={ <LoginPage/>}/>
         <Route path='*' element={ <PageNotFoundPage/>}/>
 
     </Routes>
