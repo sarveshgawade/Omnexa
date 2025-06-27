@@ -18,17 +18,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useDispatch } from 'react-redux'
 import { signUp } from '@/redux/slices/authSlice'
 import type { AppDispatch } from '@/redux/store'
+import type { RegisterFormDataType } from '@/types/auth.types'
 
 
 function RegisterPage() {
 
-  type RegisterFormDataType = {
-      fullName: string,
-      email: string,
-      phoneNumber: string,
-      password: string,
-      countryIso : String
-  };
 
   const countryCodes = [
   { name: "India", code: "+91", iso: "IN" },
@@ -92,52 +86,52 @@ function RegisterPage() {
    
   }
 
-  function validateForm(formData:RegisterFormDataType) : boolean{
+    function validateForm(formData:RegisterFormDataType) : boolean{
 
-    if(!formData.fullName ){
-        toast.error('Full name is a required field  !')
+      if(!formData.fullName ){
+          toast.error('Full name is a required field  !')
+          return false
+      }
+
+      if(!formData.email){
+        toast.error('Email is a required field !')
+          return false
+      }
+      if(!formData.phoneNumber ){
+        toast.error('Phone Number is a required field !')
+          return false
+      }
+      if( !formData.password){
+        toast.error('Password is a required field !')
+          return false
+      }
+      if(  !formData.countryIso){
+        toast.error('Country ISO Code is a required field !')
+          return false
+      }
+
+      if(formData.fullName.length < 6){
+        toast.error('Full name should be atleast of 5 characters!')
         return false
-    }
+      }
 
-    if(!formData.email){
-      toast.error('Email is a required field !')
+      if(!formData.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/)){
+        toast.error('Enter a strong password !')
         return false
-    }
-    if(!formData.phoneNumber ){
-      toast.error('Phone Number is a required field !')
+      }
+
+      if(!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/)){
+        toast.error('Enter a valid email !')
         return false
-    }
-    if( !formData.password){
-      toast.error('Password is a required field !')
+      }
+
+      if(formData.phoneNumber.length < 5){
+        toast.error('Enter a valid phone number !')
         return false
-    }
-    if(  !formData.countryIso){
-      toast.error('Country ISO Code is a required field !')
-        return false
-    }
+      }
 
-    if(formData.fullName.length < 6){
-      toast.error('Full name should be atleast of 5 characters!')
-      return false
+      return true
     }
-
-    if(!formData.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/)){
-      toast.error('Enter a strong password !')
-      return false
-    }
-
-    if(!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/)){
-      toast.error('Enter a valid email !')
-      return false
-    }
-
-    if(formData.phoneNumber.length < 5){
-      toast.error('Enter a valid phone number !')
-      return false
-    }
-
-    return true
-  }
 
   return (
     <BaseLayout>

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axiosInstance from '../../helpers/axiosInstance'
 import {toast} from 'sonner'
+import type { LoginFormDataType, RegisterFormDataType } from '@/types/auth.types';
 
 
 interface AuthState{
@@ -16,12 +17,6 @@ const initialState: AuthState = {
 };
 
 
-type RegisterFormDataType = {
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-};
 
 
 export const signUp = createAsyncThunk('auth/signup', async function (data : RegisterFormDataType){
@@ -42,28 +37,23 @@ export const signUp = createAsyncThunk('auth/signup', async function (data : Reg
     }
 })
 
-// export const signin = createAsyncThunk('/auth/signin',async function (data) {
-//     try {
-//         const response = axiosInstance.post('/user/login',data)
+export const signin = createAsyncThunk('/auth/signin',async function (data : LoginFormDataType) {
+    try {
+        const response = axiosInstance.post('/api/v1/user/login',data)
 
-//         // console.log(data);
+        console.log((await response).data);
         
+        // toast.promise(response,{
+        //     loading: 'Authenticating ...',
+        //     success: (data)=> data?.data?.message,
+        //     error: (data)=>  data?.response?.data                 
+        // })
 
-//         toast.promise(response,{
-//             loading: 'Authenticating ...',
-//             success: (data)=> {
-//                 return data?.data?.message
-//             },
-//             error: (data)=> {
-//                 return data?.response?.data                 
-//             }
-//         })
-
-//         return (await response).data
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })
+        // return (await response).data
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 // export const signout = createAsyncThunk('/auth/signout', async function () {
 //     try {
@@ -127,7 +117,7 @@ const authSlice = createSlice({
     initialState,
     reducers:{},
     extraReducers: (builder) => {
-        builder
+        // builder
         // .addCase(signin.fulfilled, (state,action)=> {
         //     localStorage.setItem('data',JSON.stringify(action?.payload))
         //     localStorage.setItem('role',action?.payload?.existingUser?.role)

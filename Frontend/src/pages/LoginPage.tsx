@@ -1,5 +1,5 @@
 import BaseLayout from '@/layouts/BaseLayout'
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Card,
   CardAction,
@@ -13,10 +13,63 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@radix-ui/react-label'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+import { useDispatch } from 'react-redux'
+import type { AppDispatch } from '@/redux/store'
+import { signin } from '@/redux/slices/authSlice'
+import type { LoginFormDataType } from '@/types/auth.types'
 
 function LoginPage() {
 
+
+
   const navigate = useNavigate()
+  const dispatch = useDispatch<AppDispatch>()
+  const [formData, setFormData] = useState({
+      email: '',
+      password: ''
+    })
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>){
+      setFormData({
+        ...formData,
+        [e.target.id] : e.target.value
+      })
+    }
+
+    function validateForm(formData:LoginFormDataType) : boolean{
+
+    if(!formData.email){
+      toast.error('Email is a required field !')
+        return false
+    }
+
+    if( !formData.password){
+      toast.error('Password is a required field !')
+        return false
+    }
+
+
+    if(!formData.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/)){
+      toast.error('Enter a valid password !')
+      return false
+    }
+
+    if(!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/)){
+      toast.error('Enter a valid email !')
+      return false
+    }
+
+
+    return true
+  }
+
+  function handleSubmit() {
+    if(validateForm(formData)){
+        dispatch(signin(formData))
+    }
+    
+  }
 
   return (
     <BaseLayout>
@@ -42,6 +95,8 @@ function LoginPage() {
                     type="email"
                     placeholder="john@example.com"
                     required
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -54,14 +109,20 @@ function LoginPage() {
                       Forgot your password?
                     </a>
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input 
+                    id="password" 
+                    type="password" 
+                    required
+                    value={formData.password}
+                    onChange={handleChange}  
+                  />
                 </div>
               </div>
             </form>
           </CardContent>
 
           <CardFooter className="flex-col gap-2">
-            <Button type="submit" className="w-full cursor-pointer">
+            <Button onClick={handleSubmit} className="w-full cursor-pointer">
               Login
             </Button>
            

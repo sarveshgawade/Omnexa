@@ -85,7 +85,7 @@ const login = catchAsync(async (req,res,next) =>{
     res.status(200).json({
         success: true,
         message: `User logged in successfully`,
-        existingUser
+        user : existingUser
     }) 
 
 })
@@ -115,7 +115,7 @@ const getProfile = catchAsync(async (req,res,next) => {
         res.status(200).json({
             success: true ,
             message: 'User details found !',
-            userProfile
+            user : userProfile
         })
 })
 
