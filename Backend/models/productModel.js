@@ -66,7 +66,11 @@ const productSchema = new mongoose.Schema({
             message: 'Product Applications must have at least one item.'
         }
     },
-    productImage:{
+    productImages:[{
+        public_id :{ type: 'String'},
+        secure_url :{ type: 'String'}
+    }],
+    productThumbnail:{
         public_id :{ type: 'String'},
         secure_url :{ type: 'String'}
     },
@@ -74,6 +78,10 @@ const productSchema = new mongoose.Schema({
         type : 'Boolean' ,
         required: [true, 'Product Premiumness  is a required field !'],
         trim : true 
+    },
+    productShelfLife:{
+        type: Number, // in months
+        required: [true, 'Product Shelf Life is a required field!'],
     }
 })
 

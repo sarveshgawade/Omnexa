@@ -7,7 +7,11 @@ import {upload} from '../middlewares/multerMiddleware.js'
 
 const router = Router()
 
-router.post('/add', isLoggedIn, authorizedRoles('ADMIN'),validateRequest(addProductSchema),upload.single('productImage'),addProduct)
+// router.post('/add', isLoggedIn, authorizedRoles('ADMIN'),validateRequest(addProductSchema),upload.single('productImage'),addProduct)
+router.post('/add', isLoggedIn, authorizedRoles('ADMIN'),validateRequest(addProductSchema),upload.fields([
+    {name: 'productThumbnail', maxCount:1},
+    {name: 'productImages', maxCount:6}
+]),addProduct)
 router.delete('/delete/:productId', isLoggedIn, authorizedRoles('ADMIN'), deleteProduct)
 router.get('/all', getAllProducts)
 router.get('/:productId', getProduct)

@@ -17,7 +17,8 @@ const addProduct = catchAsync(async (req, res, next) => {
         isOrganic,
         keyFeatures,
         applications,
-        isPremium
+        isPremium,
+        productShelfLife
     } = req.body;
 
     const existingProduct = await Product.findOne({ productName, productType });
@@ -26,22 +27,41 @@ const addProduct = catchAsync(async (req, res, next) => {
         return next(new AppError(400, 'Product with given name and type already exists'));
     }
 
-    let uploadedImage = {
+    let uploadedThumbnail = {
         public_id: 'Dummy',
         secure_url: 'Dummy'
     };
+    
+    let uploadedImages = []
 
-    if (req.file) {
+    // uploading thumbnail into cloudinary
+    if (req.files.productThumbnail[0]) {
         try {
-            const result = await uploadToCloudinary(req.file.buffer, 'omnexa_products');
+            const result = await uploadToCloudinary(req.files.productThumbnail[0].buffer, 'omnexa_products');
 
-            uploadedImage.public_id = result.public_id;
-            uploadedImage.secure_url = result.secure_url;
+            uploadedThumbnail.public_id = result.public_id;
+            uploadedThumbnail.secure_url = result.secure_url;
 
         } catch (error) {
-            console.error('Error while uploading image:', error.message);
+            console.error('Error while uploading thumbnail:', error.message);
         }
     }
+
+    // uploading images into cloudinary
+    if(req.files.productImages){
+        try {
+            uploadedImages = await Promise.all(req.files.productImages.map( file => 
+                uploadToCloudinary(file.buffer,'omnexa_products')
+                .then(result =>({
+                    public_id: result.public_id,
+                    secure_url: result.secure_url
+                }))
+            ))
+        } catch (error) {
+            console.error('Error while uploading product images:', error.message);
+        }
+    }
+
 
     const newProduct = await Product.create({
         productName,
@@ -54,7 +74,9 @@ const addProduct = catchAsync(async (req, res, next) => {
         keyFeatures,
         applications,
         isPremium,
-        productImage: uploadedImage
+        productThumbnail: uploadedThumbnail,
+        productShelfLife,
+        productImages: uploadedImages
     });
 
     res.status(201).json({

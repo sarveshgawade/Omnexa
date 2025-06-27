@@ -11,6 +11,7 @@ const addProductSchema = Joi.object({
     keyFeatures: Joi.array().items(Joi.string()).min(1).required().label("Key Features"),
     applications: Joi.array().items(Joi.string()).min(1).required().label("Applications"),
     isPremium:Joi.boolean().required().label("Is Premium"),
+    productShelfLife: Joi.number().required().label("Product Shelf Life")
 })
 
 export default addProductSchema ;
