@@ -15,6 +15,9 @@ router.post('/add', isLoggedIn, authorizedRoles('ADMIN'),validateRequest(addProd
 router.delete('/delete/:productId', isLoggedIn, authorizedRoles('ADMIN'), deleteProduct)
 router.get('/all', getAllProducts)
 router.get('/:productId', getProduct)
-router.patch('/update/:productId', isLoggedIn, authorizedRoles('ADMIN'), validateRequest(updateProductSchema), upload.single('productImage'),updateProduct)
+router.patch('/update/:productId', isLoggedIn, authorizedRoles('ADMIN'), validateRequest(updateProductSchema), upload.fields([
+    {name: 'productThumbnail', maxCount:1},
+    {name: 'productImages', maxCount:6}
+]),updateProduct)
 
 export default router

@@ -144,75 +144,84 @@ const getProduct = catchAsync(async (req,res,next) => {
 
 })
 
-const updateProduct = catchAsync( async (req,res,next) => {
-    const {productId} = req.params
-    
-    if(!productId){
-        return next(new AppError(400,'Please provide product ID for the product to be updated !'))
+const updateProduct = catchAsync(async (req, res, next) => {
+  const { productId } = req.params;
+
+  if (!productId) {
+    return next(new AppError(400, 'Please provide product ID for the product to be updated!'));
+  }
+
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    return next(new AppError(400, 'Product with given ID not found!'));
+  }
+
+  const allowedFields = [
+    "productName",
+    "productType",
+    "productQuantityType",
+    "productForm",
+    "productDescription",
+    "nutrientContent",
+    "isOrganic",
+    "keyFeatures",
+    "applications",
+    "isPremium",
+    "productShelfLife"
+  ];
+
+  const updates = {};
+
+  for (const key of allowedFields) {
+    if (req.body[key] !== undefined) {
+      updates[key] = req.body[key];
     }
-    
-    const product = await Product.findById(productId)
-    
-    if(!product){
-        return next(new AppError(400,'Product with given ID not found !'))
+  }
+
+  // Upload new thumbnail if provided
+  if (req.files?.productThumbnail?.[0]) {
+    try {
+      const result = await uploadToCloudinary(req.files.productThumbnail[0].buffer, 'omnexa_products');
+      updates.productThumbnail = {
+        public_id: result.public_id,
+        secure_url: result.secure_url
+      };
+    } catch (error) {
+      console.error("Error while uploading thumbnail:", error.message);
     }
-    
-    let updates = {}
-    const allowedFields = [
-        "productName",
-        "productType",
-        "productQuantityType",
-        "productForm",
-        "productDescription",
-        "nutrientContent",
-        "isOrganic",
-        "keyFeatures",
-        "applications",
-        "isPremium",
-        "productImage",
-    ];
-    
-    if(!req.body){
-        return next(new AppError(400,'Provide atleast one field to be updated !'))
+  }
+
+  // Upload new product images if provided
+  if (req.files?.productImages?.length) {
+    try {
+      const uploadedImages = await Promise.all(
+        req.files.productImages.map(file =>
+          uploadToCloudinary(file.buffer, 'omnexa_products').then(result => ({
+            public_id: result.public_id,
+            secure_url: result.secure_url
+          }))
+        )
+      );
+
+      updates.productImages = uploadedImages;
+    } catch (error) {
+      console.error("Error while uploading product images:", error.message);
     }
+  }
 
-    for(let key of allowedFields){
-        if(req.body[key] !== undefined){
-            updates[key] = req.body[key]
-        }
-    }
+  const updatedProduct = await Product.findByIdAndUpdate(productId, updates, {
+    new: true,
+    runValidators: true
+  });
 
-   
+  res.status(200).json({
+    success: true,
+    message: "Product updated successfully!",
+    product: updatedProduct
+  });
+});
 
-    const updatedProduct = await Product.findByIdAndUpdate(productId,updates, {new: true, runValidators: true})
-
-    if(req.file){
-         try {
-            const result = await cloudinary.v2.uploader.upload(req.file.path, {folder: 'omnexa_products'})
-
-            if(result){ 
-                updatedProduct.productImage.public_id = result.public_id
-                updatedProduct.productImage.secure_url = result.secure_url
-
-                fs.rm(`uploads/${req.file.filename}`)
-            }
-        } catch (error) {
-            console.log( 'Error while uploading image ' , error.message)
-        }
-    }
-
-    if(!updatedProduct){
-        return next(new AppError(400,'Error while updating the product !'))
-    }
-
-    await updatedProduct.save()
-
-    res.status(200).json({
-        success: true ,
-        message: "Product updated successfully !",
-        product: updatedProduct
-    })
-})
 
 
 export {addProduct,deleteProduct,getAllProducts,getProduct,updateProduct}
