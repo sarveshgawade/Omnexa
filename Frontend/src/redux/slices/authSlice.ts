@@ -6,7 +6,7 @@ import type { LoginFormDataType, RegisterFormDataType } from '@/types/auth.types
 
 interface AuthState{
     isLoggedIn: boolean,
-    role : 'USER' | 'ADMIN',
+    role : 'USER' | 'ADMIN' | null,
     data : {}
 }
 
@@ -62,11 +62,11 @@ export const signout = createAsyncThunk('/auth/signout', async function () {
 
         toast.promise(response, {
             loading: 'Logging out ...',
-            success: (data)=> data?.data?.message || 'Logged out successfully ...',
-            error: (d) => d?.response?.data?.message || 'Error in logging out ...',
+            success: (data)=> data?.data?.message || 'Logged out successfully ',
+            error: (d) => d?.response?.data?.message || 'Error in logging out !',
         })
         
-        // return (await response).data
+        return (await response).data
         
     } catch (error) {
         console.log(error);
@@ -128,13 +128,13 @@ const authSlice = createSlice({
             }
             
         })
-        // .addCase(signout.fulfilled, (state) => {
-        //     localStorage.clear()
+        .addCase(signout.fulfilled, (state) => {
+            localStorage.clear()
 
-        //     state.isLoggedIn = false
-        //     state.role = ''
-        //     state.data = {}
-        // })
+            state.isLoggedIn = false
+            state.role = null
+            state.data = {}
+        })
         // .addCase(getProfile.fulfilled, (state, action) => {
         //     localStorage.setItem('data', action?.payload)
         //     localStorage.setItem('isLoggedIn',true)
