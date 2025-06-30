@@ -99,6 +99,8 @@ const logout =  catchAsync(async  (req,res) => {
         expires: new Date(0)
     });
 
+    res.setHeader('Cache-Control', 'no-store');
+
     res.status(200).json({
         success: true ,
         message: 'User logged out'
