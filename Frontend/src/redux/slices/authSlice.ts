@@ -57,12 +57,9 @@ export const signout = createAsyncThunk('/auth/signout', async function () {
     try {
         const response = axiosInstance.get('/api/v1/user/logout')
 
-        console.log((await response).data);
-        
-
         toast.promise(response, {
             loading: 'Logging out ...',
-            success: (data)=> data?.data?.message || 'Logged out successfully ',
+            success: (data)=> data?.data?.message || 'Logged out successfully',
             error: (d) => d?.response?.data?.message || 'Error in logging out !',
         })
         

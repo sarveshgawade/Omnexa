@@ -1,38 +1,47 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Phone, Mail, UserPlus,LogOut, FunctionSquare  } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/redux/store"
 import axiosInstance from "@/helpers/axiosInstance"
 import { signout } from "@/redux/slices/authSlice"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { DialogClose } from "@radix-ui/react-dialog"
+import { Label } from "@radix-ui/react-label"
+import { Input } from "./input"
 
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
-
-  // const {isLoggedIn, role,data} = useSelector((state:RootState) => state.auth)
-
-  // useEffect(()=> {
-  //   console.log(isLoggedIn);
-  //   console.log(role);
-  //   console.log(data);
-    
-  // },[])
+  const navigate = useNavigate()
+  const {isLoggedIn, role} = useSelector((state:RootState) => state.auth)
+  const [isModelOpen, setIsModelOpen] = useState(false)
 
   async function handleLogout() {
 
     const response = await  dispatch(signout())
-    // console.log(';in header payload');
-    
-    // console.log(response.payload);
+
+    if(response?.payload?.success){
+      setIsModelOpen(false)
+        navigate('/')
+    }
     
   }
 
   return (
+
     <header className="bg-white shadow-sm border-b ">
       
       {/* Top Bar */}
@@ -87,25 +96,37 @@ export default function Header() {
               Contact
             </Link>
             
-            {/* {
+            {
               !isLoggedIn && (
-                <> */}
+                <>
                     <Link to="/register" className="text-gray-700 hover:text-green-700 font-medium">
                       Register
                     </Link>
+                  
+
                     <Link to="/login" className="text-gray-700 hover:text-green-700 font-medium">
                       Login
                     </Link>
-                {/* </>
+                    
+                </>
               )
-            } */}
-            {/* {
-              isLoggedIn && ( */}
-                <Link to="#" onClick={handleLogout} className="text-gray-700 hover:text-green-700 font-medium">
-                  Logout
-                </Link>
-              {/* )
-            } */}
+            }
+            {
+              isLoggedIn && (
+                <>
+                  <Link to="/profile" className="text-gray-700 hover:text-green-700 font-medium">
+                    Profile
+                  </Link>
+
+               
+
+                    <Link to="#" onClick={()=>setIsModelOpen(true)}  className="text-gray-700 hover:text-green-700 font-medium">
+                      Logout
+                    </Link>
+  
+                </>
+              
+              )}
 
 
           </nav>
@@ -135,13 +156,57 @@ export default function Header() {
               <Link to="/contact" className="text-gray-700 hover:text-green-700 font-medium">
                 Contact
               </Link>
-              <Button asChild className="bg-green-700 hover:bg-green-800 w-fit">
-                <Link to="/quote">Get Quote</Link>
-              </Button>
+              {
+              !isLoggedIn && (
+                <>
+                    <Link to="/register" className="text-gray-700 hover:text-green-700 font-medium">
+                      Register
+                    </Link>
+                    <Link to="/login" className="text-gray-700 hover:text-green-700 font-medium">
+                      Login
+                    </Link>
+                </>
+              )
+            }
+            {
+              isLoggedIn && (
+                <>
+                  <Link to="/profile" className="text-gray-700 hover:text-green-700 font-medium">
+                    Profile
+                  </Link>
+
+                  <Link to="#" onClick={()=> setIsModelOpen(true)}  className="text-gray-700 hover:text-green-700 font-medium">
+                    Logout
+                  </Link>
+                </>
+              
+              )}
+              
             </div>
           </nav>
         )}
       </div>
+
+        {/* popup */}
+        {
+          isModelOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white rounded-lg shadow-xl w-[90%] max-w-md p-6 animate-in fade-in zoom-in-95">
+              <h2 className="text-lg font-semibold mb-4">Do you want to logout?</h2>
+              <div className="flex justify-end gap-4">
+                <Button variant="outline" onClick={()=> setIsModelOpen(false)}>
+                  Cancel
+                </Button>
+                <Button variant="outline"  onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
+            </div>
+          </div>
+          )
+        }
+
     </header>
+     
   )
 }
