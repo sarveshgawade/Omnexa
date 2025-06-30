@@ -92,16 +92,11 @@ const login = catchAsync(async (req,res,next) =>{
 })
 
 const logout =  catchAsync(async  (req,res) => {
-    if (!req.cookies.token) {
-        throw new ErrorHandler('User is already logged out', 401);
-    }
-
     res.cookie('token', '', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'None',
-        expires: new Date(0), 
-        maxAge: 0
+        expires: new Date(0)
     });
 
     res.status(200).json({
