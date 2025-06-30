@@ -6,13 +6,13 @@ import AppError from "../utils/AppError.js";
 import sendEmail from "../utils/sendEmail.js";
 import { registerEmailTemplate } from "../emailTemplates/registerEmailTemplate.js";
 
-
 const cookieOptions = {
-    maxAge: 1*24*60*60*1000, // 1 day
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'None'
-}
+  maxAge: 1 * 24 * 60 * 60 * 1000,
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production', // only true in production
+  sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+};
+
 
 const register = catchAsync(async(req,res,next) =>{
     
