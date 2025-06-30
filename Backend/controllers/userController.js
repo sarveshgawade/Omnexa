@@ -10,7 +10,7 @@ import { registerEmailTemplate } from "../emailTemplates/registerEmailTemplate.j
 const cookieOptions = {
     maxAge: 1*24*60*60*1000, // 1 day
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'PROD',
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'None'
 }
 
