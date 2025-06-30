@@ -8,7 +8,7 @@ import { getAllProducts } from '@/redux/slices/productSlice'
 import type { AppDispatch } from '@/redux/store'
 import type { RootState } from '@/redux/store'
 import type { Product } from '../types/product.types'
-import ProductCard from '@/components/ui/productCard'
+import ProductCard from '@/components/ui/ProductCard'
 
 function Homepage() {
 

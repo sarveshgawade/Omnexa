@@ -10,7 +10,8 @@ import { registerEmailTemplate } from "../emailTemplates/registerEmailTemplate.j
 const cookieOptions = {
     maxAge: 1*24*60*60*1000, // 1 day
     httpOnly: true,
-    secure: false
+    secure: process.env.NODE_ENV === 'PROD',
+    sameSite: 'None'
 }
 
 const register = catchAsync(async(req,res,next) =>{

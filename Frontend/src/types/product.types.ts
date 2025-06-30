@@ -17,9 +17,11 @@ export interface Product {
   isOrganic: boolean;
   keyFeatures: string[];
   applications: string[];
-  productImage?: ProductImage;
+  productImages?: ProductImage[];
+  productThumbnail?: ProductImage;
   isPremium: boolean;
   createdAt?: string;
   updatedAt?: string;
+  productShelfLife: string;
   __v?: number;
 }

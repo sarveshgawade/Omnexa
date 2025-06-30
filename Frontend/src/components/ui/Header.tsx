@@ -1,15 +1,40 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Phone, Mail, UserPlus,LogOut  } from "lucide-react"
+import { Menu, X, Phone, Mail, UserPlus,LogOut, FunctionSquare  } from "lucide-react"
+import { useDispatch, useSelector } from "react-redux"
+import type { AppDispatch, RootState } from "@/redux/store"
+import axiosInstance from "@/helpers/axiosInstance"
+import { signout } from "@/redux/slices/authSlice"
+
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const dispatch = useDispatch<AppDispatch>()
+
+  // const {isLoggedIn, role,data} = useSelector((state:RootState) => state.auth)
+
+  // useEffect(()=> {
+  //   console.log(isLoggedIn);
+  //   console.log(role);
+  //   console.log(data);
+    
+  // },[])
+
+  async function handleLogout() {
+
+    const response = await  dispatch(signout())
+    // console.log(';in header payload');
+    
+    // console.log(response.payload);
+    
+  }
 
   return (
     <header className="bg-white shadow-sm border-b ">
+      
       {/* Top Bar */}
       <div className="bg-green-800 text-white py-2">
         <div className="container mx-auto px-4">
@@ -61,19 +86,27 @@ export default function Header() {
             <Link to="/contact" className="text-gray-700 hover:text-green-700 font-medium">
               Contact
             </Link>
-            <Button asChild className="bg-green-700 hover:bg-green-800 gap-2">
-              <Link to="/login" className="flex items-center">
-                <UserPlus className="w-4 h-4" />
-                  Login
-              </Link>
-            </Button>
-            <Button
-              onClick={()=> ""} // replace with your logout function
-              className="bg-red-500 hover:bg-red-600 gap-2"
-            >
-              <LogOut className="w-4 h-4" />
-              Logout
-            </Button>
+            
+            {/* {
+              !isLoggedIn && (
+                <> */}
+                    <Link to="/register" className="text-gray-700 hover:text-green-700 font-medium">
+                      Register
+                    </Link>
+                    <Link to="/login" className="text-gray-700 hover:text-green-700 font-medium">
+                      Login
+                    </Link>
+                {/* </>
+              )
+            } */}
+            {/* {
+              isLoggedIn && ( */}
+                <Link to="#" onClick={handleLogout} className="text-gray-700 hover:text-green-700 font-medium">
+                  Logout
+                </Link>
+              {/* )
+            } */}
+
 
           </nav>
 

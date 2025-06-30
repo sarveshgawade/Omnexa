@@ -1,4 +1,5 @@
 export type RegisterFormDataType = {
+  countryIso: string;
   fullName: string;
   email: string;
   phoneNumber: string;

@@ -20,7 +20,7 @@ function ProductCard({product}: productCardProps) {
         
         <div className="w-full h-64 overflow-hidden">
             <img
-            src={product?.productImage?.secure_url}
+            src={product?.productThumbnail?.secure_url}
             alt={product?.productName}
             className="w-full h-full object-cover"
             />
@@ -40,11 +40,11 @@ function ProductCard({product}: productCardProps) {
             </div>
 
             <Button
-  className="bg-green-700 hover:bg-green-800 w-full"
-  onClick={() => navigate("/products/description", { state: product._id })}
->
-  Learn More
-</Button>
+              className="bg-green-700 hover:bg-green-800 w-full cursor-pointer"
+              onClick={() => navigate("/products/description", { state: product._id })}
+            >
+              Learn More
+            </Button>
 
         </CardContent>
     </Card>

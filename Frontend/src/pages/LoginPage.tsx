@@ -37,7 +37,7 @@ function LoginPage() {
       })
     }
 
-    function validateForm(formData:LoginFormDataType) : boolean{
+  function validateForm(formData:LoginFormDataType) : boolean{
 
     if(!formData.email){
       toast.error('Email is a required field !')
@@ -64,9 +64,14 @@ function LoginPage() {
     return true
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if(validateForm(formData)){
-        dispatch(signin(formData))
+        const response = await dispatch(signin(formData))
+
+        if(response?.payload?.success){
+          navigate('/')
+        }
+        
     }
     
   }

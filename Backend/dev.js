@@ -7,6 +7,5 @@ const PORT = process.env.PORT || 3020
 
 // server listens here !
 app.listen(PORT, ()=>{
-    console.log(`server running on port :${PORT}`);
-    
+    console.log(`server running on port :${PORT}`);  
 })

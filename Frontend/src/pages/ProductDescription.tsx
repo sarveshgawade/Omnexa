@@ -48,15 +48,23 @@ function ProductDescription() {
   const  productFromList = products.find( (p: Product) => p._id === state )
   const product : Product | undefined= productFromList || productDetails || undefined
 
-  const [selectedImage, setSelectedImage] = useState(0)
-  const [selectedForComparison, setSelectedForComparison] = useState(false)
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(product?.productThumbnail?.secure_url)
   const thumbnails = [i1, i2, i3, i4]
   // const [selectedPackaging, setSelectedPackaging] = useState(product.packagingOptions[0])
 
 
   async function getProductDetails() {
-    dispatch(getProduct(state)) 
+    dispatch(getProduct(state))
+     console.log(product);
+     
   }
+
+  useEffect(() => {
+    if (product?.productThumbnail?.secure_url) {
+      setSelectedImage(product.productThumbnail.secure_url)
+    }
+  }, [product])
+
   
   useEffect(()=>{
     if(!productFromList && state){
@@ -101,8 +109,10 @@ function ProductDescription() {
             {/* Main Image */}
             <div className="relative aspect-square bg-white rounded-lg shadow-lg overflow-hidden border">
                 <img
-                  src={thumbnails[selectedImage]}
-                  alt={`Main Image ${selectedImage + 1}`}
+                 src={
+                    selectedImage
+                  }
+                  alt={`Main Image`}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
 
@@ -211,7 +221,7 @@ function ProductDescription() {
             <div className="grid grid-cols-2 gap-4 pt-4 border-t">
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Calendar className="w-4 h-4" />
-                <span>Shelf Life: 18 months</span>
+                <span>Shelf Life: {product?.productShelfLife} months</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-600">
                 <Truck className="w-4 h-4" />
@@ -228,25 +238,26 @@ function ProductDescription() {
             </div>
 
             {/* Thumbnail Images */}
-              <div className="grid grid-cols-3 gap-x-40 gap-y-3 w-full max-w-[340px]">
-                {thumbnails.map((image, index) => (
+              <div className="grid grid-cols-4 gap-x-40 gap-y-3 w-full max-w-[340px]">
+                {product?.productImages?.map((image, index) => (
                   <button
                     key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`w-40 h-40 rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImage === index
+                    onClick={() => setSelectedImage(image.secure_url)}
+                    className={`w-30 h-30 rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedImage === image.secure_url
                         ? "border-amber-500 shadow-md"
                         : "border-gray-200 hover:border-amber-300"
                     }`}
                   >
                     <img
-                      src={image}
+                      src={image.secure_url}
                       alt={`Thumbnail ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
                   </button>
                 ))}
               </div>
+
 
             {/* Action Buttons */}
             <div >

@@ -223,5 +223,4 @@ const updateProduct = catchAsync(async (req, res, next) => {
 });
 
 
-
 export {addProduct,deleteProduct,getAllProducts,getProduct,updateProduct}

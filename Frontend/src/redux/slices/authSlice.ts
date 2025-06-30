@@ -13,21 +13,21 @@ interface AuthState{
 const initialState: AuthState = {
   isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
   role: (localStorage.getItem('role') as 'USER' | 'ADMIN') || 'USER',
-  data: localStorage.getItem('data') ? JSON.parse(localStorage.getItem('data')!) : {},
+  data: localStorage.getItem('data') ? JSON.stringify(localStorage.getItem('data')!) : {},
 };
 
 
+type RegisterPayloadType = Omit<RegisterFormDataType, "countryIso">
 
-
-export const signUp = createAsyncThunk('auth/signup', async function (data : RegisterFormDataType){
+export const signUp = createAsyncThunk('auth/signup', async function (data : RegisterPayloadType){
     try {
         const response = axiosInstance.post('/api/v1/user/register',data )
 
         
         toast.promise(response,{
             loading: 'Creating account ...',
-            error: (d) => d?.response?.data?.message,
-            success: (d) => d?.data
+            error: (d) => d?.response?.data?.message || 'Error in creating account !',
+            success: (d) => d?.data || 'User registered successfully '
         })
         
         return (await response).data
@@ -41,41 +41,38 @@ export const signin = createAsyncThunk('/auth/signin',async function (data : Log
     try {
         const response = axiosInstance.post('/api/v1/user/login',data)
 
-        console.log((await response).data);
-        
-        // toast.promise(response,{
-        //     loading: 'Authenticating ...',
-        //     success: (data)=> data?.data?.message,
-        //     error: (data)=>  data?.response?.data                 
-        // })
-
-        // return (await response).data
+        toast.promise(response,{
+            loading: 'Authenticating ...',
+            error: (d) => d?.response?.data?.message || 'Error in logging in',
+            success: (d) =>  d?.data?.message || 'Logged in successfully'           
+        })
+       
+        return (await response)?.data
     } catch (error) {
         console.log(error);
     }
 })
 
-// export const signout = createAsyncThunk('/auth/signout', async function () {
-//     try {
-//         const response = axiosInstance.get('/user/logout')
+export const signout = createAsyncThunk('/auth/signout', async function () {
+    try {
+        const response = axiosInstance.get('/api/v1/user/logout')
 
-//         // console.log(`res in slide --> ${(await response).data}`);
+        console.log((await response).data);
+        
 
-//         toast.promise(response, {
-//             loading: 'Logging out ...',
-//             success: (data)=> {
-//                 return data?.data?.message
-//             },
-//             error: (data) => data?.data?.message
-//         })
+        toast.promise(response, {
+            loading: 'Logging out ...',
+            success: (data)=> data?.data?.message || 'Logged out successfully ...',
+            error: (d) => d?.response?.data?.message || 'Error in logging out ...',
+        })
         
-//         return (await response).data
+        // return (await response).data
         
-//     } catch (error) {
-//         console.log(error);
+    } catch (error) {
+        console.log(error);
         
-//     }
-// })
+    }
+})
 
 // export const getProfile = createAsyncThunk('/auth/getProfile', async function () {
 //     try {
@@ -117,16 +114,20 @@ const authSlice = createSlice({
     initialState,
     reducers:{},
     extraReducers: (builder) => {
-        // builder
-        // .addCase(signin.fulfilled, (state,action)=> {
-        //     localStorage.setItem('data',JSON.stringify(action?.payload))
-        //     localStorage.setItem('role',action?.payload?.existingUser?.role)
-        //     localStorage.setItem('isLoggedIn',true)
+        builder
+        .addCase(signin.fulfilled, (state, action)=>{
+            
+            if(action.payload){
+                state.isLoggedIn = true
+                state.data = {...action?.payload} 
+                state.role = action?.payload?.user?.role
 
-        //     state.isLoggedIn = true
-        //     state.data = action?.payload
-        //     state.role = action?.payload?.existingUser?.role 
-        // })
+                localStorage.setItem('role',action?.payload?.user?.role )
+                localStorage.setItem('data',JSON.stringify(action?.payload?.user ))
+                localStorage.setItem('isLoggedIn','true')
+            }
+            
+        })
         // .addCase(signout.fulfilled, (state) => {
         //     localStorage.clear()
 
