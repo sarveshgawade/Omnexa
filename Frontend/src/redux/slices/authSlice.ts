@@ -1,19 +1,19 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axiosInstance from '../../helpers/axiosInstance'
 import {toast} from 'sonner'
-import type { LoginFormDataType, RegisterFormDataType } from '@/types/auth.types';
+import type { LoginFormDataType, RegisterFormDataType, userProfileType } from '@/types/auth.types';
 
 
 interface AuthState{
     isLoggedIn: boolean,
     role : 'USER' | 'ADMIN' | null,
-    data : {}
+    data : userProfileType | null
 }
 
 const initialState: AuthState = {
   isLoggedIn: localStorage.getItem('isLoggedIn') === 'true',
   role: (localStorage.getItem('role') as 'USER' | 'ADMIN') || 'USER',
-  data: localStorage.getItem('data') ? JSON.stringify(localStorage.getItem('data')!) : {},
+  data: localStorage.getItem('data') ? JSON.parse(localStorage.getItem('data')!) as userProfileType : null,
 };
 
 
@@ -71,18 +71,18 @@ export const signout = createAsyncThunk('/auth/signout', async function () {
     }
 })
 
-// export const getProfile = createAsyncThunk('/auth/getProfile', async function () {
-//     try {
-//         const response = axiosInstance.get('/user/my-profile')
-//         // console.log((await response).data.userProfile)
+export const getProfile = createAsyncThunk('/auth/getProfile', async function () {
+    try {
+        const response = axiosInstance.get('/api/v1/user/profile')
+        // console.log((await response).data.userProfile)
 
-//         return (await response).data.userProfile
+        return (await response).data.user
 
-//     } catch (error) {
-//         console.log(error);
+    } catch (error) {
+        console.log(error);
         
-//     }
-// })
+    }
+})
 
 // export const updateProfile = createAsyncThunk('/user/update', async function (data) {
 //         try {
@@ -116,11 +116,11 @@ const authSlice = createSlice({
             
             if(action.payload){
                 state.isLoggedIn = true
-                state.data = {...action?.payload} 
+                state.data = {...action?.payload?.user} 
                 state.role = action?.payload?.user?.role
 
                 localStorage.setItem('role',action?.payload?.user?.role )
-                localStorage.setItem('data',JSON.stringify(action?.payload?.user ))
+                localStorage.setItem('data', JSON.stringify(action?.payload?.user))
                 localStorage.setItem('isLoggedIn','true')
             }
             
@@ -130,17 +130,17 @@ const authSlice = createSlice({
 
             state.isLoggedIn = false
             state.role = null
-            state.data = {}
+            state.data = null
         })
-        // .addCase(getProfile.fulfilled, (state, action) => {
-        //     localStorage.setItem('data', action?.payload)
-        //     localStorage.setItem('isLoggedIn',true)
-        //     localStorage.setItem('role',action?.payload?.role)
+        .addCase(getProfile.fulfilled, (state, action) => {
+            localStorage.setItem('data', JSON.stringify(action?.payload))
+            localStorage.setItem('isLoggedIn','true')
+            localStorage.setItem('role',action?.payload?.role)
 
-        //     state.isLoggedIn = true
-        //     state.data = action?.payload
-        //     state.role = action?.payload?.role
-        // })
+            state.isLoggedIn = true
+            state.data = action?.payload
+            state.role = action?.payload?.role
+        })
     }
 })
 

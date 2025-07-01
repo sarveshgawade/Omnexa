@@ -1,32 +1,20 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Phone, Mail, UserPlus,LogOut, FunctionSquare  } from "lucide-react"
+import { Menu, X, Phone, Mail,  } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/redux/store"
-import axiosInstance from "@/helpers/axiosInstance"
 import { signout } from "@/redux/slices/authSlice"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { DialogClose } from "@radix-ui/react-dialog"
-import { Label } from "@radix-ui/react-label"
-import { Input } from "./input"
+
 
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const {isLoggedIn, role} = useSelector((state:RootState) => state.auth)
+  const {isLoggedIn} = useSelector((state:RootState) => state.auth)
   const [isModelOpen, setIsModelOpen] = useState(false)
 
   async function handleLogout() {

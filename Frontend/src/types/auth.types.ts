@@ -6,7 +6,18 @@ export type RegisterFormDataType = {
   password: string;
 };
 
- export  type LoginFormDataType = {
-      email: string,
-      password: string
-  };
+export  type LoginFormDataType = {
+    email: string,
+    password: string
+};
+
+export type userProfileType = {
+  _id: string
+  fullName: string
+  email: string
+  role: 'USER' | 'ADMIN'
+  phoneNumber: string
+  createdAt: string
+  updatedAt: string
+  __v: number
+}

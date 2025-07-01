@@ -5,6 +5,7 @@ import catchAsync from  '../utils/catchAsync.js'
 import AppError from "../utils/AppError.js";
 import sendEmail from "../utils/sendEmail.js";
 import { registerEmailTemplate } from "../emailTemplates/registerEmailTemplate.js";
+import { emailUpdateTemplate } from "../emailTemplates/updateEmailTemplate.js";
 
 const cookieOptions = {
   maxAge: 1 * 24 * 60 * 60 * 1000,
@@ -12,7 +13,6 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === 'production', // only true in production
   sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
 };
-
 
 const register = catchAsync(async(req,res,next) =>{
     
@@ -176,6 +176,18 @@ const updateUser = catchAsync(async (req,res) =>{
 
     if(!updatedUser){
         return next(new AppError(400,'Error in updating user'))
+    }
+
+    try {
+        const html = emailUpdateTemplate(fullName,email)
+
+        await sendEmail({
+            to: email,
+            subject: "Email Address Successfully Updated – Omnexa Global Trade",
+            html
+        });
+    } catch (error) {
+        return next(new AppError(400, 'Error in sending email for user!'));
     }
 
     await updatedUser.save({ validateModifiedOnly: true });
