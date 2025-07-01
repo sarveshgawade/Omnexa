@@ -11,7 +11,7 @@ import { User, Mail, Building, Phone, Package, Award, Leaf } from "lucide-react"
 import BaseLayout from "@/layouts/BaseLayout"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/redux/store"
-import { getProfile, updateProfile } from "@/redux/slices/authSlice"
+import { changePassword, getProfile, updateProfile } from "@/redux/slices/authSlice"
 import { toast } from "sonner"
 
 
@@ -79,7 +79,8 @@ const mockQuotes: Quote[] = [
 export default function ProfilePage() {
 
   const { data} = useSelector((state: RootState) => state?.auth)
-  const [isModelOpen, setIsModelOpen] = useState(false)
+  const [isUpdateModelOpen, setIsUpdateModelOpen] = useState(false)
+  const [isChangePasswordModelOpen, setIsChangePasswordModelOpen] = useState(false)
   const createdAt = data?.createdAt
   ? new Date(data.createdAt).toLocaleDateString('en-IN', {
       day: '2-digit',
@@ -101,9 +102,21 @@ export default function ProfilePage() {
     phoneNumber: data?.phoneNumber || "" ,
   })
 
+  const [passwordData,setPasswordData] = useState({
+    oldPassword: '' ,
+    newPassword: ''
+  })
+
 
   const handleInputChange = (field: string, value: string) => {
     setUserInfo((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
+
+  const handlePasswordChange = (field: string, value: string) => {
+    setPasswordData((prev) => ({
       ...prev,
       [field]: value,
     }))
@@ -146,19 +159,50 @@ export default function ProfilePage() {
 
 
   const handleUpdateProfile = async () => {
+    setIsUpdateModelOpen(false)
       if(validate()){
-          setIsModelOpen(false)
          const res = await dispatch(updateProfile(userInfo))
          if(res?.payload?.success){
           fetchProfile()
+
+          
          }
          
       }
   }
 
-  const handleChangePassword = () => {
-    console.log("Opening change password dialog")
-    // Handle change password logic here
+  function validatePassword(){
+    if(!passwordData.oldPassword){
+      toast.error('Old password is a required field  !')
+      return false
+    }
+    if(!passwordData.newPassword){
+      toast.error('New password is a required field  !')
+      return false
+    }
+    if(passwordData.oldPassword === passwordData.newPassword){
+      toast.error('Old password and New password are same  !')
+      return false
+    }
+    return true
+  }
+
+  const handleChangePassword = async () => {
+    if(validatePassword()){
+      setIsChangePasswordModelOpen(false)
+    
+      const response = await dispatch(changePassword(passwordData))
+
+      if(response?.payload?.success){
+        fetchProfile()
+      } 
+    }
+
+    setPasswordData({
+      oldPassword: '',
+      newPassword: ''
+    })
+    
   }
 
   return (
@@ -241,10 +285,10 @@ export default function ProfilePage() {
             <Separator />
 
             <div className="flex flex-col sm:flex-row gap-4 justify-end">
-              <Button variant="outline" className="cursor-pointer" onClick={handleChangePassword}>
+              <Button variant="outline" className="cursor-pointer" onClick={()=> setIsChangePasswordModelOpen(true)}>
                 Change Password
               </Button>
-              <Button className="cursor-pointer " onClick={()=> setIsModelOpen(true) }>Update Profile</Button>
+              <Button className="cursor-pointer " onClick={()=> setIsUpdateModelOpen(true) }>Update Profile</Button>
             </div>
           </CardContent>
         </Card>
@@ -309,14 +353,14 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        {/* update popup */}
+        {/* update profile popup */}
         {
-          isModelOpen && (
+          isUpdateModelOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg shadow-xl w-[90%] max-w-md p-6 animate-in fade-in zoom-in-95">
-              <h2 className="text-lg font-semibold mb-4">Do you want to logout?</h2>
+              <h2 className="text-lg font-semibold mb-4">Are you sure you want to change your profile ?</h2>
               <div className="flex justify-end gap-4">
-                <Button variant="outline" onClick={()=> setIsModelOpen(false)} className="cursor-pointer">
+                <Button variant="outline" onClick={()=> setIsUpdateModelOpen(false)} className="cursor-pointer">
                   Cancel
                 </Button>
                 <Button className="cursor-pointer " onClick={handleUpdateProfile }>Update </Button>
@@ -325,6 +369,62 @@ export default function ProfilePage() {
           </div>
           )
         }
+
+        {/* change password popup */}
+        {isChangePasswordModelOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white rounded-lg shadow-xl w-[90%] max-w-md p-6 animate-in fade-in zoom-in-95">
+              <h2 className="text-lg font-semibold mb-4">Change Your Password</h2>
+
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="oldPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                    Old Password
+                  </label>
+                  <input
+                    type="password"
+                    id="oldPassword"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={passwordData?.oldPassword}
+                    onChange={(e)=> handlePasswordChange("oldPassword",e.target.value)}
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                    New Password
+                  </label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={passwordData?.newPassword}
+                     onChange={(e)=> handlePasswordChange("newPassword",e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-4 mt-6">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setIsChangePasswordModelOpen(false)
+                    setPasswordData({
+                      oldPassword: "" ,
+                      newPassword: ""
+                    })
+                  }} 
+                  className="cursor-pointer"
+                >
+                  Cancel
+                </Button>
+                <Button onClick={handleChangePassword} className="cursor-pointer">
+                  Change Password
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       </div>
     </BaseLayout>

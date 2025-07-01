@@ -175,7 +175,7 @@ export default function Header() {
         )}
       </div>
 
-        {/* popup */}
+        {/* logout popup */}
         {
           isModelOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -185,14 +185,16 @@ export default function Header() {
                 <Button variant="outline" onClick={()=> setIsModelOpen(false)}>
                   Cancel
                 </Button>
-                <Button variant="outline"  onClick={handleLogout}>
-                  Logout
-                </Button>
+                <Button className="cursor-pointer " onClick={handleLogout }>Logout </Button>
+                
               </div>
             </div>
           </div>
           )
         }
+
+        
+
 
     </header>
      

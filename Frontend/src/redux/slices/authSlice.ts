@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axiosInstance from '../../helpers/axiosInstance'
 import {toast} from 'sonner'
-import type { LoginFormDataType, RegisterFormDataType, UpdateProfileDataType, userProfileType } from '@/types/auth.types';
+import type { ChangePasswordDataType, LoginFormDataType, RegisterFormDataType, UpdateProfileDataType, userProfileType } from '@/types/auth.types';
 
 
 interface AuthState{
@@ -87,6 +87,24 @@ export const getProfile = createAsyncThunk('/auth/getProfile', async function ()
         console.log(error);
         
     }
+})
+
+export const changePassword = createAsyncThunk('/user/change-password', async function (data: ChangePasswordDataType) {
+        try {
+            const response =  axiosInstance.post('/api/v1/user/change-password',data)
+
+             toast.promise(response,{
+                loading: 'Updating password ...',
+                error: (d) => d?.response?.data?.message || 'Error in updating password',
+                success: (d) =>  d?.data?.message || 'Password updated successfully'           
+            })
+
+            return ((await response).data)
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
 })
 
 export const updateProfile = createAsyncThunk('/user/update', async function (data: UpdateProfileDataType) {

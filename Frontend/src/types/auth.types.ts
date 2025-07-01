@@ -27,3 +27,8 @@ export type userProfileType = {
   updatedAt: string
   __v: number
 }
+
+export type ChangePasswordDataType = {
+  oldPassword : string ;
+  newPassword : string ;
+}
