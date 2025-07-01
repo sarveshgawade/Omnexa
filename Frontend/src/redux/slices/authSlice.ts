@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axiosInstance from '../../helpers/axiosInstance'
 import {toast} from 'sonner'
-import type { LoginFormDataType, RegisterFormDataType, userProfileType } from '@/types/auth.types';
+import type { LoginFormDataType, RegisterFormDataType, UpdateProfileDataType, userProfileType } from '@/types/auth.types';
 
 
 interface AuthState{
@@ -74,7 +74,12 @@ export const signout = createAsyncThunk('/auth/signout', async function () {
 export const getProfile = createAsyncThunk('/auth/getProfile', async function () {
     try {
         const response = axiosInstance.get('/api/v1/user/profile')
-        // console.log((await response).data.userProfile)
+
+        toast.promise(response, {
+            loading: 'Getting Profile Info ...',
+            // success: (data)=> data?.data?.message || 'Profile Info fetched successfully !',
+            error: (d) => d?.response?.data?.message || 'Error in fetching profile info !',
+        })
 
         return (await response).data.user
 
@@ -84,26 +89,23 @@ export const getProfile = createAsyncThunk('/auth/getProfile', async function ()
     }
 })
 
-// export const updateProfile = createAsyncThunk('/user/update', async function (data) {
-//         try {
+export const updateProfile = createAsyncThunk('/user/update', async function (data: UpdateProfileDataType) {
+        try {
+            const response =  axiosInstance.post('/api/v1/user/update',data)
 
-//             // console.log(data);
-            
-//             const response =  axiosInstance.post('/user/update',data)
+             toast.promise(response,{
+                loading: 'Updating profile ...',
+                error: (d) => d?.response?.data?.message || 'Error in updating profile',
+                success: (d) =>  d?.data?.message || 'Profile updated successfully'           
+            })
 
-//             toast.promise(response,{
-//                 loading: 'Updating ...',
-//                 error: 'Error while updating',
-//                 success : d => d?.data?.message
-//             })
-
-//             return ((await response).data)
+            return ((await response).data)
             
-//         } catch (error) {
-//             console.log(error);
+        } catch (error) {
+            console.log(error);
             
-//         }
-// })
+        }
+})
 
 
 const authSlice = createSlice({

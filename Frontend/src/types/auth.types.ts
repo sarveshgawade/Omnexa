@@ -11,6 +11,12 @@ export  type LoginFormDataType = {
     password: string
 };
 
+export  type UpdateProfileDataType = {
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+};
+
 export type userProfileType = {
   _id: string
   fullName: string

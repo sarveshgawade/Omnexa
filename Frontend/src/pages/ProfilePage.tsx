@@ -11,7 +11,8 @@ import { User, Mail, Building, Phone, Package, Award, Leaf } from "lucide-react"
 import BaseLayout from "@/layouts/BaseLayout"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/redux/store"
-import { getProfile } from "@/redux/slices/authSlice"
+import { getProfile, updateProfile } from "@/redux/slices/authSlice"
+import { toast } from "sonner"
 
 
 interface Quote {
@@ -78,6 +79,7 @@ const mockQuotes: Quote[] = [
 export default function ProfilePage() {
 
   const { data} = useSelector((state: RootState) => state?.auth)
+  const [isModelOpen, setIsModelOpen] = useState(false)
   const createdAt = data?.createdAt
   ? new Date(data.createdAt).toLocaleDateString('en-IN', {
       day: '2-digit',
@@ -88,10 +90,10 @@ export default function ProfilePage() {
 
   const dispatch = useDispatch<AppDispatch>()
 
-  async function fetchProfile() {
+  function fetchProfile() {
     dispatch(getProfile())  
-
   }
+
 
   const [userInfo, setUserInfo] = useState({
     fullName: data?.fullName || "",
@@ -107,8 +109,51 @@ export default function ProfilePage() {
     }))
   }
 
-  const handleUpdateProfile = () => {
-    
+  function validate(){
+    if(!userInfo.fullName ){
+      toast.error('Full name is a required field  !')
+      return false
+    }
+
+    if(!userInfo.email){
+      toast.error('Email is a required field !')
+        return false
+    }
+
+    if(!userInfo.phoneNumber ){
+      toast.error('Phone Number is a required field !')
+        return false
+    }
+
+    if(userInfo.fullName.length < 6){
+      toast.error('Full name should be atleast of 5 characters!')
+      return false
+    }
+
+    if(!userInfo.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/)){
+      toast.error('Enter a valid email !')
+      return false
+    }
+
+    if(userInfo.phoneNumber.length < 5){
+      toast.error('Enter a valid phone number !')
+      return false
+    }
+
+    return true
+  }
+
+
+
+  const handleUpdateProfile = async () => {
+      if(validate()){
+          setIsModelOpen(false)
+         const res = await dispatch(updateProfile(userInfo))
+         if(res?.payload?.success){
+          fetchProfile()
+         }
+         
+      }
   }
 
   const handleChangePassword = () => {
@@ -144,7 +189,7 @@ export default function ProfilePage() {
                   id="fullName"
                   value={userInfo?.fullName}
                   onChange={(e) => handleInputChange("fullName", e.target.value)}
-                  placeholder={data?.fullName || "Enter your username"} 
+                  placeholder= "Enter your full name"
                   required
                 />
               </div>
@@ -159,7 +204,7 @@ export default function ProfilePage() {
                   type="email"
                   value={userInfo?.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
-                  placeholder={data?.email || "Enter your email"}
+                  placeholder= "Enter your email"
                   required
                 />
               </div>
@@ -187,7 +232,7 @@ export default function ProfilePage() {
                   type="tel"
                   value={userInfo?.phoneNumber}
                   onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
-                  placeholder={data?.phoneNumber || 'Enter phone number'}
+                  placeholder= 'Enter your phone number'
                   required
                 />
               </div>
@@ -196,10 +241,10 @@ export default function ProfilePage() {
             <Separator />
 
             <div className="flex flex-col sm:flex-row gap-4 justify-end">
-              <Button variant="outline" onClick={handleChangePassword}>
+              <Button variant="outline" className="cursor-pointer" onClick={handleChangePassword}>
                 Change Password
               </Button>
-              <Button onClick={handleUpdateProfile}>Update Profile</Button>
+              <Button className="cursor-pointer " onClick={()=> setIsModelOpen(true) }>Update Profile</Button>
             </div>
           </CardContent>
         </Card>
@@ -263,6 +308,23 @@ export default function ProfilePage() {
             )}
           </CardContent>
         </Card>
+
+        {/* update popup */}
+        {
+          isModelOpen && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white rounded-lg shadow-xl w-[90%] max-w-md p-6 animate-in fade-in zoom-in-95">
+              <h2 className="text-lg font-semibold mb-4">Do you want to logout?</h2>
+              <div className="flex justify-end gap-4">
+                <Button variant="outline" onClick={()=> setIsModelOpen(false)} className="cursor-pointer">
+                  Cancel
+                </Button>
+                <Button className="cursor-pointer " onClick={handleUpdateProfile }>Update </Button>
+              </div>
+            </div>
+          </div>
+          )
+        }
       </div>
       </div>
     </BaseLayout>
