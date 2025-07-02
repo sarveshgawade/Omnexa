@@ -1,16 +1,15 @@
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 // import Image from "next/image"
 import { Link } from 'react-router-dom'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Leaf, Shield, Award, Package } from "lucide-react"
 import BaseLayout from '@/layouts/BaseLayout'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAllProducts } from '@/redux/slices/productSlice'
 import type { AppDispatch, RootState } from '@/redux/store'
 import type { Product } from '@/types/product.types'
-import ProductCard from '@/components/ui/productCard'
+import ProductCard from '@/components/ui/ProductCard'
 
 function ProductsPage() {
 

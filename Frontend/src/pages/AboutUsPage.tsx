@@ -1,4 +1,3 @@
-import React from 'react'
 // import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Leaf, Globe, Shield, Users, Award, Target } from "lucide-react"

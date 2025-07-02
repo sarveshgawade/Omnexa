@@ -1,7 +1,6 @@
-import React from 'react'
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from './button'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import type { Product } from '@/types/product.types'
 
 interface productCardProps{

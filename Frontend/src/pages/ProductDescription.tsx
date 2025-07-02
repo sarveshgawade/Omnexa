@@ -2,25 +2,21 @@ import BaseLayout from '@/layouts/BaseLayout'
 import { getProduct } from '@/redux/slices/productSlice'
 import type { AppDispatch, RootState } from '@/redux/store'
 import type { Product } from '@/types/product.types'
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 
 import { useState } from "react"
-import Image from "../assets/friedOnion.jpeg"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
 import {
   ArrowLeft,
   Star,
   Leaf,
   Package,
   Droplets,
-  ShoppingCart,
   MessageSquare,
   Truck,
   Shield,
@@ -33,12 +29,6 @@ import {
   Info,
 } from "lucide-react"
 
-import i1 from '../assets/i1.jpg'
-import i2 from '../assets/i2.jpg'
-import i3 from '../assets/i3.jpg'
-import i4 from '../assets/i4.jpg'
-import i5 from '../assets/i5.jpg'
-
 
 function ProductDescription() {
 
@@ -49,7 +39,7 @@ function ProductDescription() {
   const product : Product | undefined= productFromList || productDetails || undefined
 
   const [selectedImage, setSelectedImage] = useState<string | undefined>(product?.productThumbnail?.secure_url)
-  const thumbnails = [i1, i2, i3, i4]
+
   // const [selectedPackaging, setSelectedPackaging] = useState(product.packagingOptions[0])
 
 

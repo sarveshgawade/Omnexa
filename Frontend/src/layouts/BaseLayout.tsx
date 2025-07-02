@@ -1,4 +1,3 @@
-import React  from 'react'
 import type {ReactNode}  from 'react';
 import Header from '@/components/ui/Header';
 import Footer from '@/components/ui/Footer';
