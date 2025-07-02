@@ -6,6 +6,8 @@ import AppError from "../utils/AppError.js";
 import sendEmail from "../utils/sendEmail.js";
 import { registerEmailTemplate } from "../emailTemplates/registerEmailTemplate.js";
 import { emailUpdateTemplate } from "../emailTemplates/updateEmailTemplate.js";
+import { resetPasswordTemplate } from "../emailTemplates/resetPasswordTemplate.js";
+import crypto from 'crypto'
 
 const cookieOptions = {
   maxAge: 1 * 24 * 60 * 60 * 1000,
@@ -152,7 +154,7 @@ const changePassword = catchAsync(async  (req,res,next) => {
 
 })
 
-const updateUser = catchAsync(async (req,res) =>{
+const updateUser = catchAsync(async (req,res,next) =>{
     
     const {fullName,phoneNumber,email} = req.body
     const id = req.user.id    
@@ -200,7 +202,66 @@ const updateUser = catchAsync(async (req,res) =>{
     })
 })
 
+const forgotPassword = catchAsync( async (req,res,next)=>{
+    const {email,fullName} = req.user
 
+    if (!email) return next(new AppError(400,'Please provide an email'));
 
+    const user = await User.findOne({ email });
+    if (!user) return next(new AppError(400,'User not found'));
 
-export {register,login,logout,getProfile,changePassword,updateUser}
+    const resetToken = user.generatePasswordResetToken()
+    await user.save({ validateBeforeSave: false });
+
+    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/user/reset-password/${resetToken}`;
+
+     try {
+        const html = resetPasswordTemplate(fullName,resetURL)
+
+        await sendEmail({
+            to: email,
+            subject: "Reset Your Password – Omnexa Global Trade",
+            html
+        });
+
+        res.status(200).json({
+            success: true,
+            message: 'Token sent to email!',
+        });
+
+    } catch (error) {
+        user.passwordResetToken = undefined
+        user.passwordResetTokenExpiry = undefined
+        await user.save({ validateBeforeSave: false });
+
+        return next(new AppError(400, 'Error in sending email for user!'));
+    }
+})
+
+const resetPassword = catchAsync( async (req,res,next)=>{
+    const {token} = req.params
+    const {password} = req.body
+    const hashedToken =  crypto.createHash('sha256').update(token).digest('hex')
+
+    const user = await User.findOne({
+        passwordResetToken: hashedToken, 
+        passwordResetTokenExpiry: {$gt: Date.now()}
+    })
+
+    if(!user){
+        return next(new AppError(400,'Token is valid or expired'))
+    }
+
+    user.password = password
+    user.passwordResetToken = undefined
+    user.passwordResetTokenExpiry = undefined
+    
+    await user.save()
+
+    res.status(200).json({
+         success: true, 
+         message: 'Password has been reset' 
+    });
+}) 
+
+export {register,login,logout,getProfile,changePassword,updateUser,forgotPassword,resetPassword}
