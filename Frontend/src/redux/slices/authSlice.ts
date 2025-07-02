@@ -111,7 +111,7 @@ export const updateProfile = createAsyncThunk('/user/update', async function (da
         try {
             const response =  axiosInstance.post('/api/v1/user/update',data)
 
-             toast.promise(response,{
+            toast.promise(response,{
                 loading: 'Updating profile ...',
                 error: (d) => d?.response?.data?.message || 'Error in updating profile',
                 success: (d) =>  d?.data?.message || 'Profile updated successfully'           
@@ -123,6 +123,22 @@ export const updateProfile = createAsyncThunk('/user/update', async function (da
             console.log(error);
             
         }
+})
+
+export const sendResetPasswordEmail = createAsyncThunk('/user/reset-password', async function(){
+    try {
+        const response = axiosInstance.post('/api/v1/user/forgot-password')
+
+        toast.promise(response,{
+            loading: 'Sending email ...',
+            error: (d) => d?.response?.data?.message || 'Error in sending email',
+            success: (d) =>  d?.data?.message || 'Email sent to your registered Email-ID'           
+        })
+
+        return (await response).data
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 

@@ -20,7 +20,7 @@ connectToDB()
 
 // middlewares
 const corsOptions = {
-    origin : process.env.FRONTEND_URL_PROD,
+    origin : [process.env.FRONTEND_URL_PROD,process.env.FRONTEND_URL_DEV],
     credentials : true
 }
 

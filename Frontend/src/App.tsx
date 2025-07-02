@@ -10,11 +10,11 @@ import ProductDescription from './pages/ProductDescription'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
+import ResetPassword from './pages/ResetPassword'
 
 function App() {
 
   return (
-    // <Homepage />
 
     <Routes>
 
@@ -27,6 +27,7 @@ function App() {
         <Route path='/register' element={ <RegisterPage/>}/>
         <Route path='/login' element={ <LoginPage/>}/>
         <Route path='/profile' element={ <ProfilePage/>}/>
+        <Route path='/reset-password' element={ <ResetPassword/>}/>
         <Route path='*' element={ <PageNotFoundPage/>}/>
 
     </Routes>

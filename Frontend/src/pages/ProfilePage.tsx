@@ -11,8 +11,9 @@ import { User, Mail, Building, Phone, Package, Award, Leaf } from "lucide-react"
 import BaseLayout from "@/layouts/BaseLayout"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/redux/store"
-import { changePassword, getProfile, updateProfile } from "@/redux/slices/authSlice"
+import { changePassword, getProfile, sendResetPasswordEmail, updateProfile } from "@/redux/slices/authSlice"
 import { toast } from "sonner"
+import { Link } from "react-router-dom"
 
 
 interface Quote {
@@ -156,7 +157,14 @@ export default function ProfilePage() {
     return true
   }
 
+  async function handleResetPassword(){
+    setIsChangePasswordModelOpen(false)
+    const response = await dispatch(sendResetPasswordEmail())
+    console.log(response.payload);
+    
 
+                      
+  }
 
   const handleUpdateProfile = async () => {
     setIsUpdateModelOpen(false)
@@ -375,6 +383,7 @@ export default function ProfilePage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg shadow-xl w-[90%] max-w-md p-6 animate-in fade-in zoom-in-95">
               <h2 className="text-lg font-semibold mb-4">Change Your Password</h2>
+              
 
               <div className="space-y-4">
                 <div>
@@ -402,6 +411,11 @@ export default function ProfilePage() {
                      onChange={(e)=> handlePasswordChange("newPassword",e.target.value)}
                   />
                 </div>
+                <Link 
+                  to="#" 
+                  className="hover:underline"
+                  onClick={handleResetPassword}  
+                >Forgot password ? Click here to reset</Link>
               </div>
 
               <div className="flex justify-end gap-4 mt-6">
@@ -431,3 +445,6 @@ export default function ProfilePage() {
     
   )
 }
+
+                    
+                      
