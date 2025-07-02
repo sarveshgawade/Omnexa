@@ -1,8 +1,9 @@
+import { config } from 'dotenv'
+config()
 import mongoose, { model } from 'mongoose'
 import bcrypt from 'bcrypt'
 import jwtToken from 'jsonwebtoken'
-import { config } from 'dotenv'
-config()
+import crypto from 'crypto'
 
 const userSchema = new mongoose.Schema({
     fullName:{
@@ -37,6 +38,13 @@ const userSchema = new mongoose.Schema({
     phoneNumber:{
         type: 'String',
         required: [true,'phoneNumber is required ']
+    },
+    passwordResetToken:{
+        type: 'String',
+        select: false
+    },
+    passwordResetTokenExpiry:{
+        type: Date
     }
 
 },{
@@ -66,6 +74,11 @@ userSchema.methods = {
     comparePassword: async function(plainTextPassword){
         return await bcrypt.compare(plainTextPassword,this.password)
     },
+    generatePasswordResetToken: function () {
+        const resetToken = crypto.randomBytes(32).toString('hex') 
+        this.passwordResetToken = resetToken
+        this.passwordResetTokenExpiry = Date.now() + 10*60*1000 // 10 min
+    }
 
 }
 

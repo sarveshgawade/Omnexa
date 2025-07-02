@@ -201,4 +201,6 @@ const updateUser = catchAsync(async (req,res) =>{
 })
 
 
+
+
 export {register,login,logout,getProfile,changePassword,updateUser}
