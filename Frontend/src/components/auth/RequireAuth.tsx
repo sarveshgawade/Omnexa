@@ -14,7 +14,6 @@ function RequireAuth({ allowedRoles }: RequireAuthProps) {
   if (isLoggedIn && allowedRoles.includes(role!)) {
     return <Outlet />
   } else if (isLoggedIn) {
-    // toast.info("Please login to continue ...")
     return <AccessDenied />
   } else {
     toast.info("Please login to continue ")

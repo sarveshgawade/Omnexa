@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import BaseLayout from '@/layouts/BaseLayout'
-import { resetPassword } from '@/redux/slices/authSlice'
+import { resetPassword, signout } from '@/redux/slices/authSlice'
 import type { AppDispatch } from '@/redux/store'
 import type { ResetPasswordDataType } from '@/types/auth.types'
 import { useState } from 'react'
@@ -38,6 +38,10 @@ function ResetPassword() {
       toast.error(`Confirm New Password & New Password won't match !`)
       return false
     }
+    if(!passwordData.newPassword .match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/)){
+      toast.error('Enter a strong password !')
+      return false
+    }
     return true
   }
 
@@ -51,6 +55,7 @@ function ResetPassword() {
       const response = await dispatch(resetPassword(data))
 
       if(response?.payload?.success){
+        dispatch(signout())
         toast.success('Redirecting to login page ...')
         setTimeout(() => {
             navigate('/login')

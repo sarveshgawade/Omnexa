@@ -161,9 +161,7 @@ export default function ProfilePage() {
     setIsChangePasswordModelOpen(false)
     const response = await dispatch(sendResetPasswordEmail())
     console.log(response.payload);
-    
-
-                      
+                    
   }
 
   const handleUpdateProfile = async () => {
@@ -192,6 +190,10 @@ export default function ProfilePage() {
       toast.error('Old password and New password are same  !')
       return false
     }
+    if(!passwordData.newPassword.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/)){
+        toast.error('Enter a strong new password !')
+        return false
+      }
     return true
   }
 

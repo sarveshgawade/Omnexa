@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-
+import React from 'react'
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,22 +8,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Phone, Mail, MapPin, Clock, MessageSquare } from "lucide-react"
 import BaseLayout from '@/layouts/BaseLayout'
-import { useSelector } from 'react-redux'
-import type { RootState } from '@/redux/store'
-import { toast } from 'sonner'
+
 
 
 function ContactPage() {
-
-  // const {isLoggedIn} = useSelector((state: RootState) => state?.auth)
-
-  // useEffect(()=>{
-  //   console.log(isLoggedIn);
-    
-  //   if(!isLoggedIn){
-  //     toast.info('Please login to contact us !')
-  //   }
-  // },[])
 
    const [formData, setFormData] = useState({
     name: "",
