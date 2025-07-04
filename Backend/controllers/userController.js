@@ -213,7 +213,8 @@ const forgotPassword = catchAsync( async (req,res,next)=>{
     const resetToken = user.generatePasswordResetToken()
     await user.save({ validateBeforeSave: false });
 
-    const resetURL = `${process.env.FRONTEND_URL_DEV}/reset-password/${resetToken}`;
+    // const resetURL = `${process.env.FRONTEND_URL_DEV}/reset-password/${resetToken}`;
+    const resetURL = `${process.env.FRONTEND_URL_PROD}/reset-password/${resetToken}`;
     // const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
 
      try {
