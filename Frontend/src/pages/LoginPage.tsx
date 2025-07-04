@@ -11,11 +11,11 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@radix-ui/react-label'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useDispatch } from 'react-redux'
 import type { AppDispatch } from '@/redux/store'
-import { signin } from '@/redux/slices/authSlice'
+import { sendResetPasswordEmail, signin } from '@/redux/slices/authSlice'
 import type { LoginFormDataType } from '@/types/auth.types'
 
 function LoginPage() {
@@ -28,6 +28,10 @@ function LoginPage() {
       email: '',
       password: ''
     })
+
+    async function handleResetPassword(){
+      dispatch(sendResetPasswordEmail())               
+    }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>){
       setFormData({
@@ -106,13 +110,12 @@ function LoginPage() {
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <a
-                      href="#"
-                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                    >
-                      Forgot your password?
-                    </a>
-                  </div>
+                    <Link 
+                      to="#" 
+                      className="hover:underline"
+                      onClick={handleResetPassword}  
+                    >Forgot password ? Click here to reset</Link>
+                      </div>
                   <Input 
                     id="password" 
                     type="password" 
