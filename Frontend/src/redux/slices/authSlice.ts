@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axiosInstance from '../../helpers/axiosInstance'
 import {toast} from 'sonner'
-import type { ChangePasswordDataType, LoginFormDataType, RegisterFormDataType, UpdateProfileDataType, userProfileType } from '@/types/auth.types';
+import type { ChangePasswordDataType, LoginFormDataType, RegisterFormDataType, ResetPasswordDataType, UpdateProfileDataType, userProfileType } from '@/types/auth.types';
 
 
 interface AuthState{
@@ -125,7 +125,7 @@ export const updateProfile = createAsyncThunk('/user/update', async function (da
         }
 })
 
-export const sendResetPasswordEmail = createAsyncThunk('/user/reset-password', async function(){
+export const sendResetPasswordEmail = createAsyncThunk('/user/send-reset-password-email', async function(){
     try {
         const response = axiosInstance.post('/api/v1/user/forgot-password')
 
@@ -138,6 +138,24 @@ export const sendResetPasswordEmail = createAsyncThunk('/user/reset-password', a
         return (await response).data
     } catch (error) {
         console.log(error);
+    }
+})
+
+export const resetPassword = createAsyncThunk('/user/reset-password', async function (data : ResetPasswordDataType) {
+    try {
+        const response = axiosInstance.patch(`/api/v1/user/reset-password/${data.token}`,{password: data.password})
+
+         toast.promise(response,{
+            loading: 'Resetting password ...',
+            error: (d) => d?.response?.data?.message || 'Error in resetting password !',
+            success: (d) =>  d?.data?.message || 'Password Reset Successfull !'           
+        })
+
+        return (await response).data
+        
+    } catch (error) {
+        console.log(error);
+        
     }
 })
 

@@ -32,3 +32,8 @@ export type ChangePasswordDataType = {
   oldPassword : string ;
   newPassword : string ;
 }
+
+export type ResetPasswordDataType = {
+  password: string;
+  token : string ;
+}

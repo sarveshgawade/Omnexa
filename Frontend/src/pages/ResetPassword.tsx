@@ -1,18 +1,63 @@
 import { Button } from '@/components/ui/button'
 import BaseLayout from '@/layouts/BaseLayout'
+import { resetPassword } from '@/redux/slices/authSlice'
+import type { AppDispatch } from '@/redux/store'
+import type { ResetPasswordDataType } from '@/types/auth.types'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 function ResetPassword() {
+
+  const {token}  = useParams()
+  const navigate = useNavigate()
   const [passwordData, setPasswordData] = useState({
     newPassword: '',
     confirmNewPassword: '',
   })
+  const dispatch = useDispatch<AppDispatch>()
 
   const handlePasswordChange = (field: string, value: string) => {
     setPasswordData((prev) => ({
       ...prev,
       [field]: value,
     }))
+  }
+
+  function validate(){
+    if(!passwordData.confirmNewPassword){
+      toast.error('Confirm New Password field is required !')
+      return false
+    }
+    if(!passwordData.newPassword){
+      toast.error('New Password field is required !')
+      return false
+    }
+    if(passwordData.newPassword !== passwordData.confirmNewPassword){
+      toast.error(`Confirm New Password & New Password won't match !`)
+      return false
+    }
+    return true
+  }
+
+  async function handleResetPassword() {
+    if(validate()){
+      const data : ResetPasswordDataType = {
+        password : passwordData.newPassword ,
+        token: token || ''
+      }
+
+      const response = await dispatch(resetPassword(data))
+
+      if(response?.payload?.success){
+        toast.success('Redirecting to login page ...')
+        setTimeout(() => {
+            navigate('/login')
+        }, 2000);
+      }
+      
+    }
   }
 
   return (
@@ -50,7 +95,7 @@ function ResetPassword() {
           </div>
 
           <div className="flex justify-end gap-4 mt-6">
-            <Button className="cursor-pointer">
+            <Button className="cursor-pointer" onClick={handleResetPassword}>
               Reset Password
             </Button>
           </div>

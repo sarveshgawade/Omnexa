@@ -11,6 +11,8 @@ import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
 import ResetPassword from './pages/ResetPassword'
+import RequireAuth from './components/auth/RequireAuth'
+import AddProduct from './pages/AddProduct'
 
 function App() {
 
@@ -18,17 +20,31 @@ function App() {
 
     <Routes>
 
-        <Route path='/' element={ <Homepage/>}/>
-        <Route path='/about' element={ <AboutUsPage/>}/>
-        <Route path='/products' element={ <ProductsPage/>}/>
+      <Route element={<RequireAuth allowedRoles={['USER','ADMIN']} />}>
+          <Route path='/quote' element={ <QuotePage/>}/>
+          <Route path='/profile' element={ <ProfilePage/>}/>
+          <Route path='/reset-password/:token' element={ <ResetPassword/>}/>
+      </Route>
+
+      <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
+        <Route path='/add-product' element={ <AddProduct/>}/>
+      </Route>
+
+      <Route element={<RequireAuth allowedRoles={['USER']} />}>
         <Route path='/contact' element={ <ContactPage/>}/>
-        <Route path='/quote' element={ <QuotePage/>}/>
-        <Route path='/products/description' element={ <ProductDescription/>}/>
-        <Route path='/register' element={ <RegisterPage/>}/>
-        <Route path='/login' element={ <LoginPage/>}/>
-        <Route path='/profile' element={ <ProfilePage/>}/>
-        <Route path='/reset-password' element={ <ResetPassword/>}/>
-        <Route path='*' element={ <PageNotFoundPage/>}/>
+      </Route>
+
+      <Route path='/' element={ <Homepage/>}/>
+      <Route path='/about' element={ <AboutUsPage/>}/>
+      <Route path='/products' element={ <ProductsPage/>}/>
+      
+      
+      <Route path='/products/description' element={ <ProductDescription/>}/>
+      <Route path='/register' element={ <RegisterPage/>}/>
+      <Route path='/login' element={ <LoginPage/>}/>
+      
+      
+      <Route path='*' element={ <PageNotFoundPage/>}/>
 
     </Routes>
   )

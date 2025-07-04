@@ -19,10 +19,10 @@ export default function Header() {
 
   async function handleLogout() {
 
+    setIsModelOpen(false)
     const response = await  dispatch(signout())
 
     if(response?.payload?.success){
-      setIsModelOpen(false)
         navigate('/')
     }
     
