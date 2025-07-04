@@ -57,8 +57,10 @@ function ResetPassword() {
       if(response?.payload?.success){
         dispatch(signout())
         toast.success('Redirecting to login page ...')
+        
         setTimeout(() => {
             navigate('/login')
+            // window.close()
         }, 2000);
       }
       

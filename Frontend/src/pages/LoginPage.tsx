@@ -20,8 +20,6 @@ import type { LoginFormDataType } from '@/types/auth.types'
 
 function LoginPage() {
 
-
-
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
   const [formData, setFormData] = useState({
@@ -29,9 +27,7 @@ function LoginPage() {
       password: ''
     })
 
-    async function handleResetPassword(){
-      dispatch(sendResetPasswordEmail())               
-    }
+    
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>){
       setFormData({
@@ -94,7 +90,7 @@ function LoginPage() {
           </CardHeader>
 
           <CardContent>
-            <form>
+            <form noValidate>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
@@ -108,13 +104,19 @@ function LoginPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-6">
                     <Label htmlFor="password">Password</Label>
-                    <Link 
-                      to="#" 
-                      className="hover:underline"
-                      onClick={handleResetPassword}  
-                    >Forgot password ? Click here to reset</Link>
+                    <Button 
+                      variant="link"   
+                    >
+                      <Link 
+                        to="/forgot-password"
+                        className='cursor-pointer' 
+                      >
+                          Forgot password ? Click here to reset
+                      </Link>
+                    </Button>
+                    
                       </div>
                   <Input 
                     id="password" 

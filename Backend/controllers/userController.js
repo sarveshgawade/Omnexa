@@ -203,7 +203,8 @@ const updateUser = catchAsync(async (req,res,next) =>{
 })
 
 const forgotPassword = catchAsync( async (req,res,next)=>{
-    const {email,fullName} = req.user
+    // const {email,fullName} = req.user
+    const {email} = req.body
 
     if (!email) return next(new AppError(400,'Please provide an email'));
 
@@ -216,9 +217,10 @@ const forgotPassword = catchAsync( async (req,res,next)=>{
     // const resetURL = `${process.env.FRONTEND_URL_DEV}/reset-password/${resetToken}`;
     const resetURL = `${process.env.FRONTEND_URL_PROD}/reset-password/${resetToken}`;
     // const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
-
+    console.log(resetURL);
+    
      try {
-        const html = resetPasswordTemplate(fullName,resetURL)
+        const html = resetPasswordTemplate(resetURL)
 
         await sendEmail({
             to: email,

@@ -13,6 +13,7 @@ import ProfilePage from './pages/ProfilePage'
 import ResetPassword from './pages/ResetPassword'
 import RequireAuth from './components/auth/RequireAuth'
 import AddProduct from './pages/AddProduct'
+import ForgotPassword from './pages/ForgotPassword'
 
 function App() {
 
@@ -23,7 +24,6 @@ function App() {
       <Route element={<RequireAuth allowedRoles={['USER','ADMIN']} />}>
           <Route path='/quote' element={ <QuotePage/>}/>
           <Route path='/profile' element={ <ProfilePage/>}/>
-          <Route path='/reset-password/:token' element={ <ResetPassword/>}/>
       </Route>
 
       <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
@@ -42,6 +42,10 @@ function App() {
       <Route path='/products/description' element={ <ProductDescription/>}/>
       <Route path='/register' element={ <RegisterPage/>}/>
       <Route path='/login' element={ <LoginPage/>}/>
+
+       <Route path='/forgot-password' element={ <ForgotPassword/>}/>
+          <Route path='/reset-password/:token' element={ <ResetPassword/>}/>
+
       
       
       <Route path='*' element={ <PageNotFoundPage/>}/>

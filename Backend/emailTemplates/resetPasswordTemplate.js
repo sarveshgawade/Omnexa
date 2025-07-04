@@ -1,4 +1,4 @@
-export const resetPasswordTemplate = (userName, resetURL) => {
+export const resetPasswordTemplate = ( resetURL) => {
   return `
     <div style="max-width:600px; margin:auto; font-family:Arial, sans-serif; background-color:#f9f9f9; border:1px solid #ddd; border-radius:8px; overflow:hidden;">
       <div style="background-color:#ffffff; padding:20px; text-align:center;">
@@ -7,7 +7,7 @@ export const resetPasswordTemplate = (userName, resetURL) => {
       </div>
 
       <div style="padding:20px; background-color:#ffffff;">
-        <p style="font-size:16px; color:#555;">Hello <strong>${userName}</strong>,</p>
+        
 
         <p style="font-size:16px; color:#555; line-height:1.6;">
           We received a request to reset your password. If this was you, please use the link below to set a new password:

@@ -12,7 +12,7 @@ router.get('/profile',isLoggedIn,getProfile)
 router.get('/logout',isLoggedIn,logout)
 router.post('/change-password',isLoggedIn,validateRequest(changePasswordUserSchema),changePassword)
 router.post('/update',isLoggedIn, validateRequest(updateUserSchema),updateUser)
-router.post('/forgot-password',isLoggedIn,forgotPassword)
-router.patch('/reset-password/:token',isLoggedIn,resetPassword)
+router.post('/forgot-password',forgotPassword)
+router.patch('/reset-password/:token',resetPassword)
 
 export default router

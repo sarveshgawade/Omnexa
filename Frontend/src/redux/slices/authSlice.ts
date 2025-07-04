@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import axiosInstance from '../../helpers/axiosInstance'
 import {toast} from 'sonner'
-import type { ChangePasswordDataType, LoginFormDataType, RegisterFormDataType, ResetPasswordDataType, UpdateProfileDataType, userProfileType } from '@/types/auth.types';
+import type { ChangePasswordDataType, ForgotPasswordDataType, LoginFormDataType, RegisterFormDataType, ResetPasswordDataType, UpdateProfileDataType, userProfileType } from '@/types/auth.types';
 
 
 interface AuthState{
@@ -125,9 +125,9 @@ export const updateProfile = createAsyncThunk('/user/update', async function (da
         }
 })
 
-export const sendResetPasswordEmail = createAsyncThunk('/user/send-reset-password-email', async function(){
+export const sendResetPasswordEmail = createAsyncThunk('/user/send-reset-password-email', async function(data: ForgotPasswordDataType){
     try {
-        const response = axiosInstance.post('/api/v1/user/forgot-password')
+        const response = axiosInstance.post('/api/v1/user/forgot-password',data)
 
         toast.promise(response,{
             loading: 'Sending email ...',

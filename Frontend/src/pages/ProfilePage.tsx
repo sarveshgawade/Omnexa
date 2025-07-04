@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/redux/store"
 import { changePassword, getProfile, sendResetPasswordEmail, updateProfile } from "@/redux/slices/authSlice"
 import { toast } from "sonner"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 
 interface Quote {
@@ -91,6 +91,7 @@ export default function ProfilePage() {
   : 'N/A'
 
   const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
 
   function fetchProfile() {
     dispatch(getProfile())  
@@ -158,10 +159,11 @@ export default function ProfilePage() {
   }
 
   async function handleResetPassword(){
-    setIsChangePasswordModelOpen(false)
-    const response = await dispatch(sendResetPasswordEmail())
-    console.log(response.payload);
-                    
+    // setIsChangePasswordModelOpen(false)
+    // const response = await dispatch(sendResetPasswordEmail())
+    // console.log(response.payload);
+    
+    navigate('/forgot-password')
   }
 
   const handleUpdateProfile = async () => {
@@ -414,9 +416,8 @@ export default function ProfilePage() {
                   />
                 </div>
                 <Link 
-                  to="#" 
-                  className="hover:underline"
-                  onClick={handleResetPassword}  
+                  to="/forgot-password" 
+                  className="hover:underline" 
                 >Forgot password ? Click here to reset</Link>
               </div>
 

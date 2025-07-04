@@ -37,3 +37,7 @@ export type ResetPasswordDataType = {
   password: string;
   token : string ;
 }
+
+  export type ForgotPasswordDataType = {
+    email : string
+  }
