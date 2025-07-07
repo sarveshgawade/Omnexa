@@ -222,5 +222,13 @@ const updateProduct = catchAsync(async (req, res, next) => {
   });
 });
 
+const getProductQuantityTypes = catchAsync (async (req,res) => {
+  const productQuantityTypes = ['KG','LTR','NOS','TONS']
 
-export {addProduct,deleteProduct,getAllProducts,getProduct,updateProduct}
+  res.status(200).json({
+        success: true ,
+        message: 'Product Quantity types found !',
+        productQuantityTypes
+  })
+})
+export {addProduct,deleteProduct,getAllProducts,getProduct,updateProduct,getProductQuantityTypes}

@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema({
     },
     productQuantityType:{
         type:'String',
-        enum: ['KG','LTR','NOS'],
+        enum: ['KG','LTR','NOS','TONS'],
         default: 'NOS',
         required: [true, 'Product Quantity is a required field !']
     },

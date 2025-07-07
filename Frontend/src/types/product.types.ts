@@ -1,5 +1,5 @@
 export type ProductType = 'AGRO' | 'NONAGRO';
-export type QuantityType = 'KG' | 'LTR' | 'NOS';
+export type QuantityType = 'KG' | 'LTR' | 'NOS' | 'TONS';
 
 export interface ProductImage {
   public_id?: string;

@@ -3,7 +3,7 @@ import Joi from 'joi'
 const addProductSchema = Joi.object({
     productName: Joi.string().required().label("Product Name"),
     productType: Joi.string().valid('AGRO','NONAGRO').required().label("Product Type"),
-    productQuantityType: Joi.string().valid('KG','LTR','NOS').required().label("Product Quantity Type"),
+    productQuantityType: Joi.string().valid('KG','LTR','NOS', 'TONS').required().label("Product Quantity Type"),
     productForm :Joi.string().required().label("Product Form"),
     productDescription:Joi.string().required().label("Product Description"),
     nutrientContent:Joi.array().items(Joi.string()).label("Nutrient Content"),
