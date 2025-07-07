@@ -25,6 +25,11 @@ const addContactSchema = Joi.object({
     .required()
     .label("Country"),
 
+  productName: Joi.string()
+    .trim()
+    .required()
+    .label("Product Name"),
+
   productId: Joi.string()
     .custom((value, helpers) => {
       if (!mongoose.Types.ObjectId.isValid(value)) {
@@ -35,8 +40,7 @@ const addContactSchema = Joi.object({
     .required()
     .label("Product ID"),
 
-  estimatedQuantity: Joi.string()
-    .trim()
+  estimatedQuantity: Joi.number()
     .required()
     .label("Estimated Quantity"),
 

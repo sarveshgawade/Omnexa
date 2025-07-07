@@ -28,7 +28,7 @@ const contactSchema = new mongoose.Schema({
     required: [true, 'Product is required!'],
   },
   estimatedQuantity: {
-    type: String,
+    type: Number,
     required: [true, 'Estimated Quantity is a required field!'],
     trim: true,
   },

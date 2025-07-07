@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import {Contact} from '../models/model.index.js'
 import catchAsync from "../utils/catchAsync.js";
 import AppError from '../utils/AppError.js';
+import sendEmail from '../utils/sendEmail.js'
+import { contactEmailTemplate } from '../emailTemplates/contactEmailTemplate.js';
 
 const addNewContact = catchAsync( async (req,res,next ) => {
     const {
@@ -12,6 +14,7 @@ const addNewContact = catchAsync( async (req,res,next ) => {
         productId,
         estimatedQuantity,
         description,
+        productName
     } = req.body
 
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000); 
@@ -36,6 +39,31 @@ const addNewContact = catchAsync( async (req,res,next ) => {
         estimatedQuantity,
         description
     });
+
+    try {
+
+        const contactDetails = {
+            fullName,
+            email,
+            companyName,
+            country,
+            productId,
+            estimatedQuantity,
+            description,
+            productName
+        }
+        
+        const html = contactEmailTemplate(contactDetails)
+        
+         await sendEmail({
+            to: "aditya.jagtap@omnexaglobaltrade.com , adityajagtap095376@gmail.com",
+            subject: "New User Tried Contacting!",
+            html
+        });
+    } catch (error) {
+        console.log("Error in sending email !");
+        
+    }
 
     if(!newContact){
         return next(new AppError(400, 'Error in contacting'));
