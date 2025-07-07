@@ -46,6 +46,40 @@ const addNewContact = catchAsync( async (req,res,next ) => {
          message: 'Contacted successfully !',
          contact: newContact
     })
-}) 
+})
 
-export {addNewContact}
+const getContacts = catchAsync(async (req,res,next) => {
+    const contacts = await Contact.find({})
+
+    if(contacts.length == 0){
+         return next(new AppError(400, `No contacts found!`));
+    }
+
+     res.status(200).json({
+         success: true ,
+         message: 'Contacts found !',
+         contacts
+    })
+})
+
+const getContactById = catchAsync(async (req,res,next) => {
+    const {id} = req.params
+
+    if(!id){
+         return next(new AppError(400, `Contact ID is required!`));
+    }
+
+    const contact = await Contact.findById(id)
+
+    if(!contact){
+         return next(new AppError(400, `No contact found with given ID!`));
+    }
+
+     res.status(200).json({
+         success: true ,
+         message: 'Contact found !',
+         contact
+    })
+})
+
+export {addNewContact,getContactById,getContacts}
