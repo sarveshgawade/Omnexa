@@ -54,7 +54,7 @@ const addNewContact = catchAsync( async (req,res,next ) => {
         }
         
         const html = contactEmailTemplate(contactDetails)
-        
+
          await sendEmail({
             to: "aditya.jagtap@omnexaglobaltrade.com , adityajagtap095376@gmail.com",
             subject: "New User Tried Contacting!",
@@ -110,4 +110,23 @@ const getContactById = catchAsync(async (req,res,next) => {
     })
 })
 
-export {addNewContact,getContactById,getContacts}
+const deleteContact = catchAsync(async (req,res,next)=>{
+    const {id} = req.params
+
+    if(!id){
+         return next(new AppError(400, `Contact ID is required!`));
+    }
+
+    const deletedContact = await Contact.findByIdAndDelete(id)
+
+    if(!deletedContact){
+        return next(new AppError(400, `No contact found with given ID!`));
+    }
+
+    res.status(200).json({
+         success: true ,
+         message: 'Contact deleted successfully !',
+    })
+})
+
+export {addNewContact,getContactById,getContacts,deleteContact}
