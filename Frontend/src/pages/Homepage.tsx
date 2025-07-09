@@ -50,22 +50,22 @@ function Homepage() {
                 India's finest farms.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-  <Button
-    asChild
-    size="lg"
-    className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700"
-  >
-    <Link to="/products">View Our Products</Link>
-  </Button>
-  <Button
-    asChild
-    variant="outline"
-    size="lg"
-    className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-green-800"
-  >
-    <Link to="/contact">Request Quote</Link>
-  </Button>
-</div>
+                <Button
+                  asChild
+                  size="lg"
+                  className="w-full sm:w-auto bg-amber-600 hover:bg-amber-700"
+                >
+                  <Link to="/products">View Our Products</Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-green-800"
+                >
+                  <Link to="/contact">Request Quote</Link>
+                </Button>
+              </div>
 
             </div>
             <div className="relative">
