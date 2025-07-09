@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,26 +8,85 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Phone, Mail, MapPin, Clock, MessageSquare } from "lucide-react"
 import BaseLayout from '@/layouts/BaseLayout'
+import { toast } from 'sonner'
+import { useDispatch, useSelector } from 'react-redux'
+import type { AppDispatch, RootState } from '@/redux/store'
+import type { Product } from '@/types/product.types'
+import { getAllProducts } from '@/redux/slices/productSlice'
+import { addNewContact } from '@/redux/slices/contactSlice'
 
 
 
 function ContactPage() {
 
    const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
-    company: "",
+    companyName: "",
     country: "",
-    product: "",
-    quantity: "",
-    message: "",
+    productId: "",
+    estimatedQuantity: "",
+    description: "",
+    productName: ""
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [selectedProductId, setSelectedProductId] = useState("");
+
+  const dispatch = useDispatch<AppDispatch>()
+    const {products} : {products: Product[]}= useSelector((state:RootState) => state.products) 
+
+    async function loadProducts() {
+
+      if(!products || products.length == 0){
+        dispatch(getAllProducts())
+      }
+    }
+
+    useEffect(()=> {
+      loadProducts()
+    },[dispatch,products])
+
+  function validateForm() {
+    const { fullName, email, country, description, companyName,estimatedQuantity, productId } = formData
+
+    if (!fullName || !email || !country || !description || !companyName || !estimatedQuantity || !productId) {
+      toast.error("Please fill in all required fields.")
+      return false
+    }
+
+    if(!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/)){
+          toast.error('Enter a valid email !')
+          return false
+    }
+    return true
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    console.log("Form submitted:", formData)
-    alert("Thank you for your inquiry! We will get back to you within 24 hours.")
+
+    if(!validateForm()) return
+
+    const response = await dispatch(
+      addNewContact({
+        ...formData,
+        estimatedQuantity: Number(formData.estimatedQuantity)
+      })
+    )
+
+    if(response?.payload?.success){
+      setFormData({
+        fullName: "",
+        email: "",
+        companyName: "",
+        country: "",
+        productId: "",
+        estimatedQuantity: "",
+        description: "",
+        productName: ""
+      })
+      setSelectedProductId(""); // <-- Reset the select field
+    }
+    
   }
 
   const handleChange = (field: string, value: string) => {
@@ -63,19 +122,19 @@ function ContactPage() {
                   <p className="text-gray-600">Fill out the form below and we'll get back to you within 24 hours.</p>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form noValidate onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="name">Full Name *</Label>
+                        <Label htmlFor="fullName" className='mb-1'>Full Name *</Label>
                         <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => handleChange("name", e.target.value)}
+                          id="fullName"
+                          value={formData.fullName}
+                          onChange={(e) => handleChange("fullName", e.target.value)}
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="email">Email Address *</Label>
+                        <Label htmlFor="email" className='mb-1'>Email Address *</Label>
                         <Input
                           id="email"
                           type="email"
@@ -88,15 +147,15 @@ function ContactPage() {
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="company">Company Name</Label>
+                        <Label htmlFor="companyName" className='mb-1'>Company Name*</Label>
                         <Input
-                          id="company"
-                          value={formData.company}
-                          onChange={(e) => handleChange("company", e.target.value)}
+                          id="companyName"
+                          value={formData.companyName}
+                          onChange={(e) => handleChange("companyName", e.target.value)}
                         />
                       </div>
                       <div>
-                        <Label htmlFor="country">Country *</Label>
+                        <Label htmlFor="country" className='mb-1'>Country *</Label>
                         <Input
                           id="country"
                           value={formData.country}
@@ -108,43 +167,62 @@ function ContactPage() {
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="product">Product Interest</Label>
-                        <Select onValueChange={(value) => handleChange("product", value)}>
+                        <Label htmlFor="productId" className='mb-1'>Product Interest*</Label>
+                        <Select
+                          value={selectedProductId}
+                          onValueChange={(value) => {
+                            setSelectedProductId(value);
+                            handleChange("productId", value);
+                            handleChange(
+                              "productName",
+                              products.find((product) => product._id === value)?.productName || ""
+                            );
+                          }}
+                        >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a product" />
+                            <SelectValue placeholder="Select a productId" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="jaggery">Natural Jaggery</SelectItem>
-                            <SelectItem value="fried-onions">Fried Onions</SelectItem>
-                            <SelectItem value="both">Both Products</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            {
+                              products && products.length > 0 ? (
+                                products.map((productId) => (
+                                  <SelectItem key={productId?._id} value={productId?._id || ""}>
+                                    {productId?.productName}
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem value="N/A" disabled>
+                                  No products available
+                                </SelectItem>
+                              )
+                            }
                           </SelectContent>
                         </Select>
                       </div>
                       <div>
-                        <Label htmlFor="quantity">Estimated Quantity</Label>
+                        <Label htmlFor="estimatedQuantity" className='mb-1'>Estimated Quantity*</Label>
                         <Input
-                          id="quantity"
+                          id="estimatedQuantity"
                           placeholder="e.g., 1000 kg/month"
-                          value={formData.quantity}
-                          onChange={(e) => handleChange("quantity", e.target.value)}
+                          value={formData.estimatedQuantity}
+                          onChange={(e) => handleChange("estimatedQuantity", e.target.value)}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <Label htmlFor="message">Message *</Label>
+                      <Label htmlFor="description" className='mb-1'>Message *</Label>
                       <Textarea
-                        id="message"
+                        id="description"
                         rows={5}
                         placeholder="Please provide details about your requirements, packaging preferences, delivery location, etc."
-                        value={formData.message}
-                        onChange={(e) => handleChange("message", e.target.value)}
+                        value={formData.description}
+                        onChange={(e) => handleChange("description", e.target.value)}
                         required
                       />
                     </div>
 
-                    <Button type="submit" className="w-full bg-green-700 hover:bg-green-800">
+                    <Button type="submit" className="cursor-pointer w-full bg-green-700 hover:bg-green-800">
                       Send Message
                     </Button>
                   </form>
