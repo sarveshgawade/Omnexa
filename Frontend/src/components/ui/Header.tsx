@@ -14,7 +14,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const {isLoggedIn} = useSelector((state:RootState) => state.auth)
+  const {isLoggedIn,role} = useSelector((state:RootState) => state.auth)
   const [isModelOpen, setIsModelOpen] = useState(false)
 
   async function handleLogout() {
@@ -71,18 +71,27 @@ export default function Header() {
             <Link to="/" className="text-gray-700 hover:text-green-700 font-medium">
               Home
             </Link>
-            <Link to="/about" className="text-gray-700 hover:text-green-700 font-medium">
-              About Us
-            </Link>
+
             <Link to="/products" className="text-gray-700 hover:text-green-700 font-medium">
               Products
             </Link>
-            <Link to="/gallery" className="text-gray-700 hover:text-green-700 font-medium">
-              Gallery
-            </Link>
-            <Link to="/contact" className="text-gray-700 hover:text-green-700 font-medium">
-              Contact
-            </Link>
+
+            {
+              role !== 'ADMIN' && (
+                <>
+                  <Link to="/gallery" className="text-gray-700 hover:text-green-700 font-medium">
+                    Gallery
+                  </Link>
+                  <Link to="/about" className="text-gray-700 hover:text-green-700 font-medium">
+                    About Us
+                  </Link>
+                  <Link to="/contact" className="text-gray-700 hover:text-green-700 font-medium">
+                    Contact
+                  </Link>
+                </>
+              )
+            }
+
             
             {
               !isLoggedIn && (
@@ -99,6 +108,7 @@ export default function Header() {
                 </>
               )
             }
+            
             {
               isLoggedIn && (
                 <>
@@ -114,7 +124,16 @@ export default function Header() {
   
                 </>
               
-              )}
+            )}
+            
+            {/* visible only for admin */}
+            {
+              isLoggedIn && role === 'ADMIN' && (
+                <Link to="/add-product" className="text-gray-700 hover:text-green-700 font-medium">
+                  Add Product 
+                </Link>
+              )
+            }
 
 
           </nav>
@@ -169,6 +188,14 @@ export default function Header() {
                 </>
               
               )}
+
+              {
+              isLoggedIn && role === 'ADMIN' && (
+                <Link to="/add-product" className="text-gray-700 hover:text-green-700 font-medium">
+                  Add Product 
+                </Link>
+              )
+            }
               
             </div>
           </nav>

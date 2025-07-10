@@ -1,6 +1,6 @@
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,14 +10,36 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { FileText, Clock, Shield, Truck } from "lucide-react"
 import BaseLayout from "@/layouts/BaseLayout"
+import { useDispatch, useSelector } from "react-redux"
+import type { AppDispatch, RootState } from "@/redux/store"
+import type { Product } from "@/types/product.types"
+import { getAllProducts } from "@/redux/slices/productSlice"
 
 function QuotePage() {
+
+    const [selectedProductId, setSelectedProductId] = useState("");
+
+  const dispatch = useDispatch<AppDispatch>()
+    const {products} : {products: Product[]}= useSelector((state:RootState) => state.products) 
+
+    async function loadProducts() {
+
+      if(!products || products.length == 0){
+        dispatch(getAllProducts())
+      }
+    }
+
+    useEffect(()=> {
+      loadProducts()
+    },[dispatch,products])
+
+
  const [formData, setFormData] = useState({
     // Company Information
     companyName: "",
-    contactPerson: "",
-    email: "",
-    phone: "",
+    contactPersonName: "",
+    companyEmail: "",
+    mobileNumber: "",
     country: "",
     address: "",
 
@@ -122,55 +144,61 @@ function QuotePage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="companyName">Company Name *</Label>
+                        <Label htmlFor="companyName" className="mb-1">Company Name *</Label>
                         <Input
                           id="companyName"
+                          placeholder="ABC Pvt Ltd"
                           value={formData.companyName}
                           onChange={(e) => handleChange("companyName", e.target.value)}
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="contactPerson">Contact Person *</Label>
+                        <Label htmlFor="contactPersonName" className="mb-1">Contact Person *</Label>
                         <Input
-                          id="contactPerson"
-                          value={formData.contactPerson}
-                          onChange={(e) => handleChange("contactPerson", e.target.value)}
+                          id="contactPersonName"
+                          placeholder="Enter your name"
+                          value={formData.contactPersonName}
+                          onChange={(e) => handleChange("contactPersonName", e.target.value)}
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="email">Email Address *</Label>
+                        <Label htmlFor="companyEmail" className="mb-1">Company Email Address *</Label>
                         <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleChange("email", e.target.value)}
+                          id="companyEmail"
+                          type="companyEmail"
+                          placeholder="john@gmail.com"
+                          value={formData.companyEmail}
+                          onChange={(e) => handleChange("companyEmail", e.target.value)}
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="phone">Phone Number *</Label>
+                        <Label htmlFor="mobileNumber" className="mb-1">Mobile Number *</Label>
                         <Input
-                          id="phone"
-                          value={formData.phone}
-                          onChange={(e) => handleChange("phone", e.target.value)}
+                          id="mobileNumber"
+                          placeholder="Please include country code"
+                          value={formData.mobileNumber}
+                          onChange={(e) => handleChange("mobileNumber", e.target.value)}
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="country">Country *</Label>
+                        <Label htmlFor="country" className="mb-1">Country *</Label>
                         <Input
                           id="country"
                           value={formData.country}
+                          placeholder="e.g., India"
                           onChange={(e) => handleChange("country", e.target.value)}
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="address">Complete Address</Label>
+                        <Label htmlFor="address" className="mb-1">Complete Address</Label>
                         <Input
-                          id="address"
+                          id="address" 
+                          placeholder="Street, City, State, Zip Code"
                           value={formData.address}
                           onChange={(e) => handleChange("address", e.target.value)}
                         />
@@ -183,20 +211,40 @@ function QuotePage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Requirements</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="product">Product *</Label>
-                        <Select onValueChange={(value) => handleChange("product", value)}>
+                        <Label htmlFor="productId" className='mb-1'>Product Interest*</Label>
+                        <Select
+                          value={selectedProductId}
+                          onValueChange={(value) => {
+                            setSelectedProductId(value);
+                            handleChange("productId", value);
+                            handleChange(
+                              "productName",
+                              products.find((product) => product._id === value)?.productName || ""
+                            );
+                          }}
+                        >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select product" />
+                            <SelectValue placeholder="Select a product" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="jaggery">Natural Jaggery</SelectItem>
-                            <SelectItem value="fried-onions">Fried Onions</SelectItem>
-                            <SelectItem value="both">Both Products</SelectItem>
+                            {
+                              products && products.length > 0 ? (
+                                products.map((productId) => (
+                                  <SelectItem key={productId?._id} value={productId?._id || ""}>
+                                    {productId?.productName}
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem value="N/A" disabled>
+                                  No products available
+                                </SelectItem>
+                              )
+                            }
                           </SelectContent>
                         </Select>
                       </div>
                       <div>
-                        <Label htmlFor="quantity">Required Quantity *</Label>
+                        <Label htmlFor="quantity" className="mb-1">Required Quantity *</Label>
                         <Input
                           id="quantity"
                           placeholder="e.g., 5000 kg"
@@ -206,7 +254,7 @@ function QuotePage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="packagingType">Packaging Type</Label>
+                        <Label htmlFor="packagingType" className="mb-1">Packaging Type</Label>
                         <Select onValueChange={(value) => handleChange("packagingType", value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select packaging" />
@@ -236,7 +284,7 @@ function QuotePage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping & Delivery</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="deliveryLocation">Delivery Location *</Label>
+                        <Label htmlFor="deliveryLocation" className="mb-1">Delivery Location *</Label>
                         <Input
                           id="deliveryLocation"
                           placeholder="Port/City, Country"
@@ -245,20 +293,39 @@ function QuotePage() {
                           required
                         />
                       </div>
-                      <div>
-                        <Label htmlFor="preferredDelivery">Preferred Delivery Terms</Label>
-                        <Select onValueChange={(value) => handleChange("preferredDelivery", value)}>
+                      {/* <div>
+                        <Label htmlFor="productId" className='mb-1'>Product Interest*</Label>
+                        <Select
+                          value={selectedProductId}
+                          onValueChange={(value) => {
+                            setSelectedProductId(value);
+                            handleChange("productId", value);
+                            handleChange(
+                              "productName",
+                              products.find((product) => product._id === value)?.productName || ""
+                            );
+                          }}
+                        >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select delivery terms" />
+                            <SelectValue placeholder="Select a productId" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="fob">FOB (Free on Board)</SelectItem>
-                            <SelectItem value="cif">CIF (Cost, Insurance, Freight)</SelectItem>
-                            <SelectItem value="cfr">CFR (Cost and Freight)</SelectItem>
-                            <SelectItem value="exw">EXW (Ex Works)</SelectItem>
+                            {
+                              products && products.length > 0 ? (
+                                products.map((productId) => (
+                                  <SelectItem key={productId?._id} value={productId?._id || ""}>
+                                    {productId?.productName}
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem value="N/A" disabled>
+                                  No products available
+                                </SelectItem>
+                              )
+                            }
                           </SelectContent>
                         </Select>
-                      </div>
+                      </div> */}
                       <div className="flex items-center space-x-2 mt-4">
                         <Checkbox
                           id="urgentOrder"
@@ -275,7 +342,7 @@ function QuotePage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="additionalRequirements">Additional Requirements or Specifications</Label>
+                        <Label htmlFor="additionalRequirements" className="mb-1">Additional Requirements or Specifications</Label>
                         <Textarea
                           id="additionalRequirements"
                           rows={4}
@@ -285,18 +352,18 @@ function QuotePage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="hearAboutUs">How did you hear about us?</Label>
+                        <Label htmlFor="hearAboutUs" className="mb-1">How did you hear about us?</Label>
                         <Select onValueChange={(value) => handleChange("hearAboutUs", value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select an option" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="google">Google Search</SelectItem>
-                            <SelectItem value="referral">Referral</SelectItem>
-                            <SelectItem value="trade-show">Trade Show</SelectItem>
-                            <SelectItem value="social-media">Social Media</SelectItem>
-                            <SelectItem value="directory">Business Directory</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            <SelectItem value="Google">Google Search</SelectItem>
+                            <SelectItem value="Instagram">Instagram</SelectItem>
+                            <SelectItem value="LinkedIn">LinkedIn</SelectItem>
+                            <SelectItem value="Advertisement">Advertisement</SelectItem>
+                            <SelectItem value="Friend">Friend</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

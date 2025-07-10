@@ -90,7 +90,7 @@ function LoginPage() {
           </CardHeader>
 
           <CardContent>
-            <form noValidate>
+            <form noValidate onSubmit={(e)=> {e.preventDefault() ; handleSubmit()}}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>

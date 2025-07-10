@@ -67,6 +67,7 @@ function Homepage() {
                 </Button>
               </div>
 
+
             </div>
             <div className="relative">
               <img
@@ -216,7 +217,7 @@ function Homepage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" className="bg-amber-600 hover:bg-amber-700">
-              <Link to="/contact">Get Quote</Link>
+              <Link to="/quote">Get Quote</Link>
             </Button>
             <Button
               asChild

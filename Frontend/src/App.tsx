@@ -14,6 +14,7 @@ import ResetPassword from './pages/ResetPassword'
 import RequireAuth from './components/auth/RequireAuth'
 import AddProduct from './pages/AddProduct'
 import ForgotPassword from './pages/ForgotPassword'
+import EditProduct from './pages/EditProduct'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
 
       <Route element={<RequireAuth allowedRoles={['ADMIN']} />}>
         <Route path='/add-product' element={ <AddProduct/>}/>
+        <Route path='/edit-product' element={ <EditProduct/>}/>
       </Route>
 
       <Route element={<RequireAuth allowedRoles={['USER']} />}>
