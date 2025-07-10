@@ -92,7 +92,7 @@ function ProductCard({product}: productCardProps) {
                 <Button variant="outline" onClick={()=> setIsModelOpen(false)}>
                   Cancel
                 </Button>
-                <Button className="cursor-pointer " onClick={()=>  handleDelete(product?._id || '') }>Logout </Button>
+                <Button className="cursor-pointer " onClick={()=>  handleDelete(product?._id || '') }>Delete </Button>
                 
               </div>
             </div>

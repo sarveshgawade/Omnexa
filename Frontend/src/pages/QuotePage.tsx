@@ -332,7 +332,7 @@ function QuotePage() {
                           checked={formData.urgentOrder}
                           onCheckedChange={(checked) => handleChange("urgentOrder", checked as boolean)}
                         />
-                        <Label htmlFor="urgentOrder">This is an urgent order (within 2 weeks)</Label>
+                        <Label htmlFor="urgentOrder">This is an urgent order</Label>
                       </div>
                     </div>
                   </div>
