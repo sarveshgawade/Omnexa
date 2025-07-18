@@ -1,3 +1,4 @@
+import cloudinary from "../config/cloudinary.js";
 import { uploadToCloudinary } from "../middlewares/multerMiddleware.js";
 import Gallery from "../models/galleryModel.js";
 import AppError from "../utils/AppError.js";
@@ -50,7 +51,7 @@ const addImagesToGallery = catchAsync(async (req, res, next) => {
 const getAllGalleryImages = catchAsync(async (req,res,next) => {
     const galleryImages = await Gallery.find()
 
-    if(galleryImages.length == 0){
+    if(galleryImages.length == 0 || galleryImages[0].galleryImages.length == 0){
         return next(new AppError(404, 'No gallery images found !'))
     }
 
@@ -60,5 +61,45 @@ const getAllGalleryImages = catchAsync(async (req,res,next) => {
     })
 })
 
+const deleteImageById = catchAsync(async (req,res,next) => {
+    const {imageId} = req.params
 
-export {addImagesToGallery,getAllGalleryImages}
+    if(!imageId){
+        return next(new AppError(400, 'Image ID is required !'))
+    }
+
+    const galleryImages = await Gallery.find()
+    
+    if(galleryImages.length == 0 || galleryImages[0].galleryImages.length == 0){
+        return next(new AppError(404, 'No gallery images found !'))
+    }
+    
+    const imageIndex = galleryImages[0].galleryImages.findIndex(image =>image._id.toString() === imageId)
+    
+
+    if(imageIndex === -1){
+        return next(new AppError(404, 'Image with given ID not found !'))
+    }
+
+    galleryImages[0].galleryImages.splice(imageIndex,1)
+
+    galleryImages[0].save()
+
+    res.status(200).json({
+        success: true,
+        message: 'Image deleted successfully !',
+        galleryImages: galleryImages[0].galleryImages
+    })
+
+})
+
+const deleteAllImages = catchAsync(async (req,res,next) => {
+    await Gallery.deleteMany()
+
+    res.status(200).json({
+        success: true,
+        message: 'All images deleted successfully !'
+    })
+})
+
+export {addImagesToGallery,getAllGalleryImages,deleteImageById,deleteAllImages}
