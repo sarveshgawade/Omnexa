@@ -9,6 +9,7 @@ import type { AppDispatch } from '@/redux/store'
 import type { RootState } from '@/redux/store'
 import type { Product } from '../types/product.types'
 import ProductCard from '@/components/ui/ProductCard'
+import banner from '../assets/banner.png'
 
 function Homepage() {
 
@@ -49,7 +50,7 @@ function Homepage() {
                 Premium quality Jaggery and Fried Onions exported globally. Pure, hygienic, and sustainably sourced from
                 India's finest farms.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              {/* <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   asChild
                   size="lg"
@@ -65,13 +66,13 @@ function Homepage() {
                 >
                   <Link to="/contact">Request Quote</Link>
                 </Button>
-              </div>
+              </div> */}
 
 
             </div>
             <div className="relative">
               <img
-                src="./assets/"
+                src={banner}
                 alt="Agricultural products - Jaggery and Fried Onions"
                 width={600}
                 height={400}

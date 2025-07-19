@@ -1,7 +1,6 @@
 import axiosInstance from "@/helpers/axiosInstance";
 import type { GalleryImage } from "@/types/gallery.type";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ActivityIcon } from "lucide-react";
 import { toast } from "sonner";
 
 interface GalleryState {

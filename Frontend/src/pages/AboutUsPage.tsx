@@ -2,6 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Leaf, Globe, Shield, Users, Award, Target } from "lucide-react"
 import BaseLayout from '@/layouts/BaseLayout'
+import banner from '../assets/banner.png'
 
 function AboutUsPage() {
   return (
@@ -43,7 +44,7 @@ function AboutUsPage() {
             </div>
             <div className="relative">
               <img
-                src="/placeholder.svg?height=400&width=600"
+                src={banner}
                 alt="Our agricultural processing facility"
                 width={600}
                 height={400}
