@@ -4,6 +4,7 @@ import {persistReducer} from 'redux-persist'
 import productSliceReducer from './slices/productSlice'
 import authSliceReducer from './slices/authSlice'
 import contactSliceReducer from './slices/contactSlice'
+import gallerySliceReducer from './slices/gallerySlice'
 
 
 const persistConfiguration = {
@@ -17,7 +18,7 @@ const reducer = combineReducers({
     products: productSliceReducer ,
     auth: authSliceReducer,
     contact: contactSliceReducer,
-    
+    gallery: gallerySliceReducer
 
 })
 

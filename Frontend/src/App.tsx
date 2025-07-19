@@ -15,6 +15,7 @@ import RequireAuth from './components/auth/RequireAuth'
 import AddProduct from './pages/AddProduct'
 import ForgotPassword from './pages/ForgotPassword'
 import EditProduct from './pages/EditProduct'
+import GalleryPage from './pages/GalleryPage'
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
       <Route path='/' element={ <Homepage/>}/>
       <Route path='/about' element={ <AboutUsPage/>}/>
       <Route path='/products' element={ <ProductsPage/>}/>
+      <Route path='/gallery' element={ <GalleryPage/>}/>
       
       
       <Route path='/products/description' element={ <ProductDescription/>}/>

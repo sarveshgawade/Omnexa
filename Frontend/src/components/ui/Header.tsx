@@ -76,12 +76,14 @@ export default function Header() {
               Products
             </Link>
 
+            <Link to="/gallery" className="text-gray-700 hover:text-green-700 font-medium">
+                    Gallery
+            </Link>
+
             {
               role !== 'ADMIN' && (
                 <>
-                  <Link to="/gallery" className="text-gray-700 hover:text-green-700 font-medium">
-                    Gallery
-                  </Link>
+                  
                   <Link to="/about" className="text-gray-700 hover:text-green-700 font-medium">
                     About Us
                   </Link>
