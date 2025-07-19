@@ -5,7 +5,7 @@ import productSliceReducer from './slices/productSlice'
 import authSliceReducer from './slices/authSlice'
 import contactSliceReducer from './slices/contactSlice'
 import gallerySliceReducer from './slices/gallerySlice'
-
+import quoteSliceReducer from './slices/quoteSlice'
 
 const persistConfiguration = {
     key: 'root',
@@ -18,7 +18,8 @@ const reducer = combineReducers({
     products: productSliceReducer ,
     auth: authSliceReducer,
     contact: contactSliceReducer,
-    gallery: gallerySliceReducer
+    gallery: gallerySliceReducer,
+    quote: quoteSliceReducer
 
 })
 

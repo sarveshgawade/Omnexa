@@ -17,8 +17,12 @@ const addQuote = catchAsync(async (req,res,next) => {
         requiredQty,
         isUrgent,
         deliveryLocation,
-        heardFrom
+        heardFrom,
+        isCustomPackagingRequired,
+        packagingType
     } = req.body
+
+    const {email} = req.user
     
     const timeWindowInHours = 24;
     const currentTime = new Date(); 
@@ -47,7 +51,10 @@ const addQuote = catchAsync(async (req,res,next) => {
         requiredQty,
         isUrgent,
         deliveryLocation,
-        heardFrom
+        heardFrom,
+        isCustomPackagingRequired,
+        packagingType,
+        quotedByEmail: email
     })
 
     try {
@@ -204,4 +211,20 @@ const updateQuote = catchAsync(async(req,res,next) => {
     })
 })
 
-export {addQuote,deleteQuote,getQuote,getAllQuotes,updateQuote}
+const getQuotesByUser = catchAsync(async(req,res,next) => {
+    const {email} = req.user
+
+    const quotes = await Quote.find({quotedByEmail: email}).populate('productId',)
+
+    if(quotes.length == 0){
+        return next(new AppError(400,'No Quote Found !'))
+    }
+
+    return res.status(200).json({   
+        success: true,
+        message: 'Quotes Fetched Successfully !',
+        quotes
+    })
+})
+
+export {addQuote,deleteQuote,getQuote,getAllQuotes,updateQuote,getQuotesByUser}

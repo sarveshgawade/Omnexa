@@ -49,7 +49,12 @@ const quoteSchema = new mongoose.Schema({
         min: [1, 'Quantity must be at least 1']
     },
     isUrgent: {
-        type: 'Boolean'
+        type: 'Boolean',
+        required: [true, 'isUrgent is a required field!'],
+    },
+    isCustomPackagingRequired: {
+        type: 'Boolean',
+        required: [true, 'isCustomPackagingRequired is a required field!'],
     },
     deliveryLocation: {
         type: 'String',
@@ -61,7 +66,21 @@ const quoteSchema = new mongoose.Schema({
         enum: ['Google', 'Friend', 'LinkedIn', 'Advertisement', 'Other',"Instagram"],
         required: [true, 'Source (Heard From) is a required field!'],
         trim: true
+    },
+    packagingType: {
+        type: 'String',
+        enum: ['PLASTIC_SHAKER', 'CORRUGATED_BOX', 'WOODEN_BOX', 'PALLET_PACKING', 'PLASTIC_PALLET', 'FIBC_BAG', 'PLASTIC_BAG', 'PP_BAG', 'THERMOCOL_BOX', 'BUBBLE_WRAP'],
+        required: [true, 'Packaging Type is a required field!'],
+        trim: true
+    },
+    quotedByEmail:{
+        type: 'String',
+        required: [true, 'User Email is a required field!'],
+        trim: true,
+        lowercase: true,
+        match: [/^\S+@\S+\.\S+$/, 'Please fill a valid email address']
     }
+
 }, {
     timestamps: true
 });

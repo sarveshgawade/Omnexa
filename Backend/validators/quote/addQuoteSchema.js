@@ -67,6 +67,15 @@ const addQuoteSchema = Joi.object({
         .valid('Google', 'Friend', 'LinkedIn', 'Advertisement', 'Other','Instagram')
         .required()
         .label('Heard from'),
+
+    isCustomPackagingRequired: Joi.boolean()
+        .required()
+        .label('Is Custom Packaging Required'),
+
+    packagingType: Joi.string()
+        .valid('PLASTIC_SHAKER', 'CORRUGATED_BOX', 'WOODEN_BOX', 'PALLET_PACKING', 'PLASTIC_PALLET', 'FIBC_BAG', 'PLASTIC_BAG', 'PP_BAG', 'THERMOCOL_BOX', 'BUBBLE_WRAP')
+        .required()
+        .label('Packaging Type'),
 });
 
 export default addQuoteSchema;

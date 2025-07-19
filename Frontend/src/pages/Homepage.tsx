@@ -62,7 +62,7 @@ function Homepage() {
                   
                   variant="outline"
                   size="lg"
-                  className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-green-800"
+                  className="w-full sm:w-auto border-white text-black hover:bg-white hover:text-green-800"
                 >
                   <Link to="/contact">Request Quote</Link>
                 </Button>
@@ -224,7 +224,7 @@ function Homepage() {
               asChild
               variant="outline"
               size="lg"
-              className="border-white text-white hover:bg-white hover:text-green-800"
+              className="border-white text-black hover:bg-white hover:text-green-800"
             >
               <Link to="/about">Learn More</Link>
             </Button>

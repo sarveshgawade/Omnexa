@@ -1,5 +1,5 @@
 import type React from "react"
-
+import type { Quote } from "@/types/quote.types"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,13 +14,17 @@ import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/redux/store"
 import type { Product } from "@/types/product.types"
 import { getAllProducts } from "@/redux/slices/productSlice"
+import { PACKAGING_TYPES } from "@/types/quote.types"
+import { toast } from "sonner"
+import { addQuote } from "@/redux/slices/quoteSlice"
 
 function QuotePage() {
 
     const [selectedProductId, setSelectedProductId] = useState("");
 
-  const dispatch = useDispatch<AppDispatch>()
+    const dispatch = useDispatch<AppDispatch>()
     const {products} : {products: Product[]}= useSelector((state:RootState) => state.products) 
+    
 
     async function loadProducts() {
 
@@ -34,7 +38,7 @@ function QuotePage() {
     },[dispatch,products])
 
 
- const [formData, setFormData] = useState({
+ const [formData, setFormData] = useState<Quote>({
     // Company Information
     companyName: "",
     contactPersonName: "",
@@ -44,34 +48,151 @@ function QuotePage() {
     address: "",
 
     // Product Requirements
-    product: "",
-    quantity: "",
+    requiredQty: 0,
     packagingType: "",
-    customPackaging: false,
+    isCustomPackagingRequired: false,
+    productId: "",
 
     // Shipping & Delivery
     deliveryLocation: "",
-    preferredDelivery: "",
-    urgentOrder: false,
+    isUrgent: false,
 
     // Additional Information
-    additionalRequirements: "",
-    hearAboutUs: "",
+    additionalInfo: "",
+    heardFrom: "",
 
-    // Terms
+    // field to be omitted
     agreeToTerms: false,
+    productQuantityType: "",
+    product: "",
+    productName: ""
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Quote request submitted:", formData)
-    alert(
-      "Thank you for your quote request! Our team will prepare a detailed quotation and send it to you within 24 hours.",
-    )
+    
+    if(!validateForm()){
+      return
+    }
+
+    const response = await dispatch(addQuote(formData))
+    if(response?.payload?.success){
+      setFormData({
+        companyName: "",
+        contactPersonName: "",
+        companyEmail: "",
+        mobileNumber: "",
+        country: "",
+        address: "",
+
+        // Product Requirements
+        requiredQty: 0,
+        packagingType: "",
+        isCustomPackagingRequired: false,
+        productId: "",
+
+        // Shipping & Delivery
+        deliveryLocation: "",
+        isUrgent: false,
+
+        // Additional Information
+        additionalInfo: "",
+        heardFrom: "",
+
+        // field to be omitted
+        agreeToTerms: false,
+        productQuantityType: "",
+        product: "",
+        productName: ""
+      })
+    }
+    
   }
 
   const handleChange = (field: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    if (field === "requiredQty") {
+      setFormData((prev) => ({ ...prev, [field]: Number(value) }))
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: value }))
+    }
+  }
+
+  function validateForm() {
+    if (!formData.companyName) {
+      toast.error("Company Name is required")
+      return false
+    }
+    if (!formData.contactPersonName) {
+      toast.error("Contact Person Name is required")
+      return false
+    }
+    if (!formData.companyEmail) {
+      toast.error("Company Email is required")
+      return false
+    }
+    if (!formData.mobileNumber) {
+      toast.error("Mobile Number is required")
+      return false
+    }
+    if (!formData.country) {  
+      toast.error("Country is required")  
+      return false
+    }
+    if (!formData.productId) {
+      toast.error("Product is required")
+      return false
+    }
+    if (!formData.requiredQty) {
+      toast.error("Required Quantity is required")
+      return false
+    }
+    if (!formData.packagingType) {
+      toast.error("Packaging Type is required")
+      return false
+    }
+    if (!formData.deliveryLocation) {
+      toast.error("Delivery Location is required")
+      return false
+    }
+    if (!formData.agreeToTerms) {
+      toast.error("You must agree to the terms and conditions")
+      return false
+    } 
+    if(!formData.address){
+      toast.error("Address is required")
+      return false
+    }
+    if(!formData.heardFrom){
+      toast.error("How did you hear about us? is required")
+      return false
+    }
+
+    if(formData.companyName.length < 5){
+      toast.error("Company Name must be at least 5 characters long")
+      return false
+    }
+    if(formData.contactPersonName.length < 5){
+      toast.error("Contact Person Name must be at least 5 characters long")
+      return false
+    }
+    if(!formData.companyEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/)){
+      toast.error("Enter a valid email !")
+      return false
+    }
+    
+    if(formData.requiredQty < 1){
+      toast.error("Required Quantity must be at least 1")
+      return false
+    }
+    if(formData.address.length < 10){
+      toast.error("Address must be at least 10 characters long")
+      return false
+    }
+    if(formData.deliveryLocation.length < 10){
+      toast.error("Delivery Location must be at least 10 characters long")
+      return false
+    }
+    return true
   }
 
   return (
@@ -138,7 +259,7 @@ function QuotePage() {
                 </p>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-8">
+                <form noValidate onSubmit={handleSubmit} className="space-y-8">
                   {/* Company Information */}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Company Information</h3>
@@ -195,7 +316,7 @@ function QuotePage() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="address" className="mb-1">Complete Address</Label>
+                        <Label htmlFor="address" className="mb-1">Complete Address *</Label>
                         <Input
                           id="address" 
                           placeholder="Street, City, State, Zip Code"
@@ -210,71 +331,81 @@ function QuotePage() {
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Requirements</h3>
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="productId" className='mb-1'>Product Interest*</Label>
-                        <Select
-                          value={selectedProductId}
-                          onValueChange={(value) => {
-                            setSelectedProductId(value);
-                            handleChange("productId", value);
-                            handleChange(
-                              "productName",
-                              products.find((product) => product._id === value)?.productName || ""
-                            );
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a product" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {
-                              products && products.length > 0 ? (
-                                products.map((productId) => (
-                                  <SelectItem key={productId?._id} value={productId?._id || ""}>
-                                    {productId?.productName}
+                      <div className="flex items-end md:items-center gap-2">
+                        <div className="flex-1">
+                          <Label htmlFor="productId" className="mb-1">Product Interest*</Label>
+                          <Select
+                            value={selectedProductId}
+                            onValueChange={(value) => {
+                              setFormData((prev) => ({
+                                ...prev,
+                                productQuantityType: products.find((product) => product._id === value)?.productQuantityType || ""
+                              }))
+                              setSelectedProductId(value);
+                              handleChange("productId", value);
+                              handleChange(
+                                "productName",
+                                products.find((product) => product._id === value)?.productName || ""
+                              );
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a product" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {
+                                products && products.length > 0 ? (
+                                  products.map((productId) => (
+                                    <SelectItem key={productId?._id} value={productId?._id || ""}>
+                                      {productId?.productName}
+                                    </SelectItem>
+                                  ))
+                                ) : (
+                                  <SelectItem value="N/A" disabled>
+                                    No products available
                                   </SelectItem>
-                                ))
-                              ) : (
-                                <SelectItem value="N/A" disabled>
-                                  No products available
-                                </SelectItem>
-                              )
-                            }
-                          </SelectContent>
-                        </Select>
+                                )
+                              }
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Input
+                          readOnly
+                          id="productQuantityType"
+                          value={formData.productQuantityType}
+                          className="w-20 h-10 text-center bg-gray-100 mt-6 md:mt-0"
+                        />
                       </div>
                       <div>
-                        <Label htmlFor="quantity" className="mb-1">Required Quantity *</Label>
+                        <Label htmlFor="requiredQty" className="mb-1">Required Quantity *</Label>
                         <Input
-                          id="quantity"
+                          id="requiredQty"
                           placeholder="e.g., 5000 kg"
-                          value={formData.quantity}
-                          onChange={(e) => handleChange("quantity", e.target.value)}
+                          value={formData.requiredQty}
+                          onChange={(e) => handleChange("requiredQty", e.target.value)}
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="packagingType" className="mb-1">Packaging Type</Label>
+                        <Label htmlFor="packagingType" className="mb-1">Packaging Type *</Label>
                         <Select onValueChange={(value) => handleChange("packagingType", value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select packaging" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="bulk-25kg">Bulk - 25kg bags</SelectItem>
-                            <SelectItem value="bulk-50kg">Bulk - 50kg bags</SelectItem>
-                            <SelectItem value="retail-500g">Retail - 500g packages</SelectItem>
-                            <SelectItem value="retail-1kg">Retail - 1kg packages</SelectItem>
-                            <SelectItem value="custom">Custom packaging</SelectItem>
+                            {
+                              PACKAGING_TYPES.map((packagingType)=> <SelectItem key={packagingType.value} value={packagingType.value}>{packagingType.label}</SelectItem>)
+                            }
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="flex items-center space-x-2 mt-8">
                         <Checkbox
-                          id="customPackaging"
-                          checked={formData.customPackaging}
-                          onCheckedChange={(checked) => handleChange("customPackaging", checked as boolean)}
+                          id="isCustomPackagingRequired"
+                          checked={formData.isCustomPackagingRequired}
+                          onCheckedChange={(checked) => handleChange("isCustomPackagingRequired", checked as boolean)}
                         />
-                        <Label htmlFor="customPackaging">I need custom packaging/branding</Label>
+                        <Label htmlFor="isCustomPackagingRequired">I need custom packaging/branding</Label>
                       </div>
                     </div>
                   </div>
@@ -328,11 +459,11 @@ function QuotePage() {
                       </div> */}
                       <div className="flex items-center space-x-2 mt-4">
                         <Checkbox
-                          id="urgentOrder"
-                          checked={formData.urgentOrder}
-                          onCheckedChange={(checked) => handleChange("urgentOrder", checked as boolean)}
+                          id="isUrgent"
+                          checked={formData.isUrgent}
+                          onCheckedChange={(checked) => handleChange("isUrgent", checked as boolean)}
                         />
-                        <Label htmlFor="urgentOrder">This is an urgent order</Label>
+                        <Label htmlFor="isUrgent">This is an urgent order</Label>
                       </div>
                     </div>
                   </div>
@@ -342,18 +473,18 @@ function QuotePage() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="additionalRequirements" className="mb-1">Additional Requirements or Specifications</Label>
+                        <Label htmlFor="additionalInfo" className="mb-1">Additional Requirements or Specifications</Label>
                         <Textarea
-                          id="additionalRequirements"
+                          id="additionalInfo"
                           rows={4}
                           placeholder="Please specify any special requirements, quality standards, certifications needed, etc."
-                          value={formData.additionalRequirements}
-                          onChange={(e) => handleChange("additionalRequirements", e.target.value)}
+                          value={formData.additionalInfo}
+                          onChange={(e) => handleChange("additionalInfo", e.target.value)}
                         />
                       </div>
                       <div>
-                        <Label htmlFor="hearAboutUs" className="mb-1">How did you hear about us?</Label>
-                        <Select onValueChange={(value) => handleChange("hearAboutUs", value)}>
+                        <Label htmlFor="heardFrom" className="mb-1">How did you hear about us? *</Label>
+                        <Select onValueChange={(value) => handleChange("heardFrom", value)}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select an option" />
                           </SelectTrigger>

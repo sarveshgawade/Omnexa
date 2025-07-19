@@ -1,6 +1,6 @@
 "use client"
 
-import {useState } from "react"
+import {useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -14,16 +14,9 @@ import type { AppDispatch, RootState } from "@/redux/store"
 import { changePassword, getProfile, sendResetPasswordEmail, updateProfile } from "@/redux/slices/authSlice"
 import { toast } from "sonner"
 import { Link, useNavigate } from "react-router-dom"
+import { getQuotesByUser } from "@/redux/slices/quoteSlice"
+import type { Quote, QuoteOnProfile } from "@/types/quote.types"
 
-
-interface Quote {
-  id: string
-  productName: string
-  productQuantity: number
-  productType: string
-  isPremium: boolean
-  isOrganic: boolean
-}
 
 // Mock data for quotes
 const mockQuotes: Quote[] = [
@@ -77,6 +70,7 @@ const mockQuotes: Quote[] = [
   },
 ]
 
+
 export default function ProfilePage() {
 
   const { data} = useSelector((state: RootState) => state?.auth)
@@ -92,10 +86,21 @@ export default function ProfilePage() {
 
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const { quotes } = useSelector((state: RootState) => state.quote) as { quotes: QuoteOnProfile[] }
 
   function fetchProfile() {
     dispatch(getProfile())  
   }
+
+  async function fetchQuotes(){
+    const response = await dispatch(getQuotesByUser())
+    console.log(response?.payload)
+  }
+
+  useEffect(() => {
+    fetchQuotes()
+  }, [])
+  
 
 
   const [userInfo, setUserInfo] = useState({
@@ -316,29 +321,29 @@ export default function ProfilePage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {mockQuotes.map((quote) => (
-                <Card key={quote.id} className="border border-gray-200 hover:shadow-md transition-shadow">
+              { quotes && quotes.length > 0 && quotes.map((quote) => (
+                <Card key={quote?._id} className="border border-gray-200 hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
                     <div className="space-y-4">
                       <div>
-                        <h3 className="font-semibold text-lg text-gray-900">{quote.productName}</h3>
-                        <p className="text-sm text-gray-600 mt-1">Type: {quote.productType}</p>
-                        <p className="text-sm text-gray-600 mt-1">Date: 01/01/2025</p>//
+                        <h3 className="font-semibold text-lg text-gray-900">{quote?.productId?.productName}</h3>
+                        <p className="text-sm text-gray-600 mt-1">Type: {quote?.productId?.productType}</p>
+                        <p className="text-sm text-gray-600 mt-1">Date: {new Date(quote?.createdAt).toLocaleDateString()}</p>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <Package className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm font-medium">Quantity: {quote.productQuantity}</span>
+                        <span className="text-sm font-medium">Quantity: {quote?.requiredQty}</span>
                       </div>
 
                       <div className="flex flex-wrap gap-2">
-                        {quote.isPremium && (
+                        {quote?.productId?.isPremium && (
                           <Badge variant="default" className="flex items-center gap-1">
                             <Award className="h-3 w-3" />
                             Premium
                           </Badge>
                         )}
-                        {quote.isOrganic && (
+                        {quote?.productId?.isOrganic && (
                           <Badge
                             variant="secondary"
                             className="flex items-center gap-1 bg-green-100 text-green-800 hover:bg-green-200"
@@ -347,7 +352,7 @@ export default function ProfilePage() {
                             Organic
                           </Badge>
                         )}
-                        {!quote.isPremium && !quote.isOrganic && <Badge variant="outline">Standard</Badge>}
+                        {!quote?.productId?.isPremium&& !quote?.productId?.isOrganic && <Badge variant="outline">Standard</Badge>}
                       </div>
                     </div>
                   </CardContent>
@@ -355,7 +360,7 @@ export default function ProfilePage() {
               ))}
             </div>
 
-            {mockQuotes.length === 0 && (
+            {quotes && quotes.length === 0 && (
               <div className="text-center py-12">
                 <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No quotes yet</h3>

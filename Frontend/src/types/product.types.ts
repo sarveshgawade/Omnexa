@@ -1,5 +1,6 @@
 export type ProductType = 'AGRO' | 'NONAGRO';
 export type QuantityType = 'KG' | 'LTR' | 'NOS' | 'TONS';
+export type PackagingType = 'PLASTIC_SHAKER' | 'CORRUGATED_BOX' | 'WOODEN_BOX' | 'PALLET_PACKING' | 'PLASTIC_PALLET' | 'FIBC_BAG' | 'PLASTIC_BAG' | 'PP_BAG' | 'THERMOCOL_BOX' | 'BUBBLE_WRAP';
 
 export interface ProductImage {
   public_id?: string;
