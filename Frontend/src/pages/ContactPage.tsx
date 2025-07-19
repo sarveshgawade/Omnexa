@@ -180,7 +180,7 @@ function ContactPage() {
                           }}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a productId" />
+                            <SelectValue placeholder="Select a product" />
                           </SelectTrigger>
                           <SelectContent>
                             {

@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Leaf, Globe, Shield, Users, Award, Target } from "lucide-react"
 import BaseLayout from '@/layouts/BaseLayout'
 import banner from '../assets/banner.png'
+import ceoImg from '../assets/aditya.jpeg'
 
 function AboutUsPage() {
   return (
@@ -157,35 +158,20 @@ function AboutUsPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <div className="flex justify-center">
             <Card className="text-center">
               <CardContent className="p-6">
-                <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4"></div>
+                <img
+                  src={ceoImg}
+                  alt="Founder & CEO"
+                  className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow"
+                />
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Founder & CEO</h3>
-                <p className="text-green-700 font-medium mb-3">Agricultural Export Expert</p>
+                <p className="text-green-700 font-medium mb-3">" Bringing India’s Agricultural Gold to Global Tables. ”</p>
                 <p className="text-gray-600 text-sm">
-                  15+ years experience in international trade and agricultural exports.
+                Building a global footprint in agro exports with Omnexa Global Trade — delivering premium Jaggery & Fried Onions across borders. <br />
+                Passionate about connecting India’s finest produce with the world, one shipment at a time.
                 </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardContent className="p-6">
-                <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4"></div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Quality Manager</h3>
-                <p className="text-green-700 font-medium mb-3">Food Safety Specialist</p>
-                <p className="text-gray-600 text-sm">
-                  Certified food technologist ensuring product quality and safety standards.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardContent className="p-6">
-                <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-4"></div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Operations Head</h3>
-                <p className="text-green-700 font-medium mb-3">Logistics & Supply Chain</p>
-                <p className="text-gray-600 text-sm">Expert in international logistics and supply chain management.</p>
               </CardContent>
             </Card>
           </div>

@@ -173,7 +173,7 @@ function ProductsPage() {
               asChild
               variant="outline"
               size="lg"
-              className="border-white text-white hover:bg-white hover:text-green-800"
+              className="border-white text-black hover:bg-white hover:text-green-800"
             >
               <Link to="/contact">Contact Us</Link>
             </Button>

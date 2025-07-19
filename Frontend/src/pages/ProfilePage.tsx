@@ -18,59 +18,6 @@ import { getQuotesByUser } from "@/redux/slices/quoteSlice"
 import type { Quote, QuoteOnProfile } from "@/types/quote.types"
 
 
-// Mock data for quotes
-const mockQuotes: Quote[] = [
-  {
-    id: "1",
-    productName: "Organic Wheat Flour",
-    productQuantity: 50,
-    productType: "Grain",
-    isPremium: true,
-    isOrganic: true,
-  },
-  {
-    id: "2",
-    productName: "Premium Rice",
-    productQuantity: 25,
-    productType: "Grain",
-    isPremium: true,
-    isOrganic: false,
-  },
-  {
-    id: "3",
-    productName: "Fresh Vegetables",
-    productQuantity: 100,
-    productType: "Produce",
-    isPremium: false,
-    isOrganic: true,
-  },
-  {
-    id: "4",
-    productName: "Dairy Products",
-    productQuantity: 30,
-    productType: "Dairy",
-    isPremium: false,
-    isOrganic: false,
-  },
-  {
-    id: "5",
-    productName: "Organic Honey",
-    productQuantity: 15,
-    productType: "Sweetener",
-    isPremium: true,
-    isOrganic: true,
-  },
-  {
-    id: "6",
-    productName: "Spice Mix",
-    productQuantity: 75,
-    productType: "Spices",
-    isPremium: false,
-    isOrganic: false,
-  },
-]
-
-
 export default function ProfilePage() {
 
   const { data} = useSelector((state: RootState) => state?.auth)
