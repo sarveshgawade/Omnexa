@@ -152,60 +152,7 @@ function ProductDescription() {
                   <MapPin className="w-4 h-4" />
                   <span className="text-sm">Origin: Kolhapur, Maharashtra, India</span>
                 </div>
-            </div>
-
-            {/* Price and Order Info */}
-            {/* <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
-              <CardContent className="p-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Price Range</h3>
-                    <p className="text-2xl font-bold text-amber-700">{product?.price}</p>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Order Quantity</h3>
-                    <p className="text-gray-600">
-                      Min: <span className="font-semibold">{product.minOrder}</span>
-                    </p>
-                    <p className="text-gray-600">
-                      Max: <span className="font-semibold">{product.maxOrder}</span>
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card> */}
-
-            {/* Packaging Options */}
-            {/* <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Packaging Options</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.packagingOptions.map((option) => (
-                  <Button
-                    key={option}
-                    variant={selectedPackaging === option ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setSelectedPackaging(option)}
-                    className={
-                      selectedPackaging === option
-                        ? "bg-amber-600 hover:bg-amber-700"
-                        : "border-amber-600 text-amber-700 hover:bg-amber-50"
-                    }
-                  >
-                    {option}
-                  </Button>
-                ))}
-              </div>
-            </div> */}
-
-            {/* Compare Checkbox */}
-            {/* <div className="flex items-center space-x-2">
-              <Checkbox id="compare" checked={selectedForComparison} onCheckedChange={setSelectedForComparison} />
-              <Label htmlFor="compare" className="text-sm text-gray-600 cursor-pointer">
-                Add to comparison list
-              </Label>
-            </div> */}
-
-           
+            </div>        
 
             {/* Quick Info */}
             <div className="grid grid-cols-2 gap-4 pt-4 border-t">
@@ -228,25 +175,25 @@ function ProductDescription() {
             </div>
 
             {/* Thumbnail Images */}
-              <div className="grid grid-cols-4 gap-x-40 gap-y-3 w-full max-w-[340px]">
-                {product?.productImages?.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(image.secure_url)}
-                    className={`w-30 h-30 rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImage === image.secure_url
-                        ? "border-amber-500 shadow-md"
-                        : "border-gray-200 hover:border-amber-300"
-                    }`}
-                  >
-                    <img
-                      src={image.secure_url}
-                      alt={`Thumbnail ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+            <div className="flex flex-wrap gap-2 w-full">
+              {product?.productImages?.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(image.secure_url)}
+                  className={`w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0 ${
+                    selectedImage === image.secure_url
+                      ? "border-amber-500 shadow-md"
+                      : "border-gray-200 hover:border-amber-300"
+                  }`}
+                >
+                  <img
+                    src={image.secure_url}
+                    alt={`Thumbnail ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
 
 
             {/* Action Buttons */}
