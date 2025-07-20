@@ -27,7 +27,8 @@ function ContactPage() {
     productId: "",
     estimatedQuantity: "",
     description: "",
-    productName: ""
+    productName: "",
+    productQuantityType: "" // Add this field
   })
 
   const [selectedProductId, setSelectedProductId] = useState("");
@@ -63,12 +64,16 @@ function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
 
     if(!validateForm()) return
 
+    const {productQuantityType, ...contactData} = formData
+    
+
     const response = await dispatch(
       addNewContact({
-        ...formData,
+        ...contactData,
         estimatedQuantity: Number(formData.estimatedQuantity)
       })
     )
@@ -82,7 +87,8 @@ function ContactPage() {
         productId: "",
         estimatedQuantity: "",
         description: "",
-        productName: ""
+        productName: "",
+        productQuantityType: ""
       })
       setSelectedProductId(""); // <-- Reset the select field
     }
@@ -166,38 +172,50 @@ function ContactPage() {
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="productId" className='mb-1'>Product Interest*</Label>
-                        <Select
-                          value={selectedProductId}
-                          onValueChange={(value) => {
-                            setSelectedProductId(value);
-                            handleChange("productId", value);
-                            handleChange(
-                              "productName",
-                              products.find((product) => product._id === value)?.productName || ""
-                            );
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a product" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {
-                              products && products.length > 0 ? (
-                                products.map((productId) => (
-                                  <SelectItem key={productId?._id} value={productId?._id || ""}>
-                                    {productId?.productName}
+                      <div className="flex items-end md:items-center gap-2">
+                        <div className="flex-1">
+                          <Label htmlFor="productId" className='mb-1'>Product Interest*</Label>
+                          <Select
+                            value={selectedProductId}
+                            onValueChange={(value) => {
+                              setFormData((prev) => ({
+                                ...prev,
+                                productQuantityType: products.find((product) => product._id === value)?.productQuantityType || ""
+                              }))
+                              setSelectedProductId(value);
+                              handleChange("productId", value);
+                              handleChange(
+                                "productName",
+                                products.find((product) => product._id === value)?.productName || ""
+                              );
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a product" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {
+                                products && products.length > 0 ? (
+                                  products.map((productId) => (
+                                    <SelectItem key={productId?._id} value={productId?._id || ""}>
+                                      {productId?.productName}
+                                    </SelectItem>
+                                  ))
+                                ) : (
+                                  <SelectItem value="N/A" disabled>
+                                    No products available
                                   </SelectItem>
-                                ))
-                              ) : (
-                                <SelectItem value="N/A" disabled>
-                                  No products available
-                                </SelectItem>
-                              )
-                            }
-                          </SelectContent>
-                        </Select>
+                                )
+                              }
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Input
+                          readOnly
+                          id="productQuantityType"
+                          value={formData.productQuantityType}
+                          className="w-20 h-10 text-center bg-gray-100 mt-6 md:mt-0"
+                        />
                       </div>
                       <div>
                         <Label htmlFor="estimatedQuantity" className='mb-1'>Estimated Quantity*</Label>
