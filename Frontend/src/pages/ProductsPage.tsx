@@ -18,14 +18,14 @@ function ProductsPage() {
 
     async function loadProducts() {
 
-      if(!products || products.length == 0){
+      // if(!products || products.length == 0){
         dispatch(getAllProducts())
-      }
+      // }
     }
 
     useEffect(()=> {
       loadProducts()
-    },[dispatch,products])
+    },[])
 
   return (
     <BaseLayout>

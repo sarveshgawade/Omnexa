@@ -62,6 +62,22 @@ export const deleteProduct = createAsyncThunk('/product/delete', async function 
     }
 })
 
+export const addProduct = createAsyncThunk('/product/add', async function (productData: FormData) {
+    try {
+        const response = axiosInstance.post('/api/v1/product/add', productData)
+        
+        toast.promise(response, {
+            loading: 'Adding product...',
+            error: (d) => d?.response?.data?.message || 'Error in Adding Product !',
+            success: () =>  'Product Added Successfully !',
+        })
+
+        return (await response)?.data
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 const productSlice = createSlice({
     name: 'products',
     initialState,
