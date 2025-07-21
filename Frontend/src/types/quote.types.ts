@@ -41,8 +41,29 @@ export type QuoteOnProfile = {
   requiredQty: number;
   createdAt: string;
   updatedAt: string;
+  contactPersonName : string
 }
 
+export type QuoteDescription = {
+  productId: Product;
+  requiredQty: number;
+  createdAt: string;
+  contactPersonName : string
+  companyName : string
+  mobileNumber : string
+  address : string
+  country : string
+  additionalInfo : string
+  heardFrom : string
+  companyEmail : string
+  isUrgent : boolean
+  isCustomPackagingRequired : boolean
+  deliveryLocation : string
+  packagingType : string
+  productQuantityType : string
+  agreeToTerms : boolean
+  quotedByEmail : string
+}
 
 // For rendering with labels:
 export const PACKAGING_TYPES =  [

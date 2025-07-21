@@ -110,6 +110,16 @@ export default function Header() {
                 </>
               )
             }
+
+             {/* visible only for admin */}
+             {
+              isLoggedIn && role === 'ADMIN' && (
+                <Link to="/add-product" className="text-gray-700 hover:text-green-700 font-medium">
+                  Add Product 
+                </Link>
+              )
+            }
+            
             
             {
               isLoggedIn && (
@@ -128,14 +138,7 @@ export default function Header() {
               
             )}
             
-            {/* visible only for admin */}
-            {
-              isLoggedIn && role === 'ADMIN' && (
-                <Link to="/add-product" className="text-gray-700 hover:text-green-700 font-medium">
-                  Add Product 
-                </Link>
-              )
-            }
+           
 
 
           </nav>

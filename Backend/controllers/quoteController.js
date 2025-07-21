@@ -146,7 +146,7 @@ const getQuote = catchAsync(async (req,res,next) => {
 })
 
 const getAllQuotes = catchAsync(async (req,res,next) => {
-    const quotes = await Quote.find()
+    const quotes = await Quote.find().populate('productId')
 
     if(quotes.length == 0){
         return next(new AppError(400,'No Quote Found !'))

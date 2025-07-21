@@ -64,7 +64,7 @@ function Homepage() {
                   size="lg"
                   className="w-full sm:w-auto border-white text-black hover:bg-white hover:text-green-800"
                 >
-                  <Link to="/contact">Request Quote</Link>
+                  <Link to="/quote">Request Quote</Link>
                 </Button>
               </div>
 
