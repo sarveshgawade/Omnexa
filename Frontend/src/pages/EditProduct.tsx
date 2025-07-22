@@ -426,7 +426,7 @@ function EditProduct() {
             </div>
 
             <div>
-              <Button type="submit" className="w-full bg-neutral-800 text-white hover:bg-neutral-700">
+              <Button type="submit" className="cursor-pointer w-full bg-neutral-800 text-white hover:bg-neutral-700">
                 Update Product
               </Button>
             </div>

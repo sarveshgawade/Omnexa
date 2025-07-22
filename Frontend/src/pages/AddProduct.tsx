@@ -259,6 +259,7 @@ function AddProduct() {
                     <Button
                       type="button"
                       variant="ghost"
+                      className='cursor-pointer'
                       onClick={() => handleRemoveArrayItem('nutrientContent', idx)}
                       disabled={form.nutrientContent.length === 1}
                     >
@@ -268,6 +269,7 @@ function AddProduct() {
                 ))}
                 <Button
                   type="button"
+                  className='cursor-pointer'
                   onClick={() => handleAddArrayItem('nutrientContent')}
                 >
                   <Plus size={16} className="mr-2" />
@@ -307,6 +309,7 @@ function AddProduct() {
                   <Button
                     type="button"
                     variant="ghost"
+                    className='cursor-pointer'
                     onClick={() => handleRemoveArrayItem('keyFeatures', idx)}
                     disabled={form.keyFeatures.length === 1}
                   >
@@ -316,6 +319,7 @@ function AddProduct() {
               ))}
               <Button
                 type="button"
+                className='cursor-pointer'
                 onClick={() => handleAddArrayItem('keyFeatures')}
               >
                 <Plus size={16} className="mr-2" />
@@ -340,6 +344,7 @@ function AddProduct() {
                   <Button
                     type="button"
                     variant="ghost"
+                    className='cursor-pointer'
                     onClick={() => handleRemoveArrayItem('applications', idx)}
                     disabled={form.applications.length === 1}
                   >
@@ -349,6 +354,7 @@ function AddProduct() {
               ))}
               <Button
                 type="button"
+                className='cursor-pointer'
                 onClick={() => handleAddArrayItem('applications')}
               >
                 <Plus size={16} className="mr-2" />
@@ -421,7 +427,7 @@ function AddProduct() {
             </div>
 
             <div>
-              <Button type="submit" className="w-full bg-neutral-800 text-white hover:bg-neutral-700">
+              <Button type="submit" className="cursor-pointer w-full bg-neutral-800 text-white hover:bg-neutral-700">
                 Add Product
               </Button>
             </div>

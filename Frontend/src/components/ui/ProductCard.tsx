@@ -44,7 +44,7 @@ function ProductCard({product}: productCardProps) {
                         <Button
                             size="icon"
                             variant="outline"
-                            className="p-2"
+                            className="p-2 cursor-pointer"
                             onClick={()=> navigate('/edit-product', {state: {id:product?._id}})}
                             title="Edit"
                             
@@ -54,7 +54,7 @@ function ProductCard({product}: productCardProps) {
                         <Button
                             size="icon"
                             variant="outline"
-                            className="p-2"
+                            className="p-2 cursor-pointer"
                             onClick={()=>setIsModelOpen(true)}
                             title="Delete"
                         >
