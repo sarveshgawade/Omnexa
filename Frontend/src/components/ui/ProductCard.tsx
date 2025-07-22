@@ -45,7 +45,7 @@ function ProductCard({product}: productCardProps) {
                             size="icon"
                             variant="outline"
                             className="p-2"
-                            onClick={()=> navigate('/edit-product')}
+                            onClick={()=> navigate('/edit-product', {state: {id:product?._id}})}
                             title="Edit"
                             
                         >

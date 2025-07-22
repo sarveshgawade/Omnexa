@@ -78,6 +78,28 @@ export const addProduct = createAsyncThunk('/product/add', async function (produ
     }
 })
 
+export const updateProduct = createAsyncThunk('/product/update', async function (productData: FormData) {
+    try {
+        // Extract productId from FormData
+        const productId = productData.get('_id');
+        if (!productId) {
+            throw new Error('Product ID (_id) is required in FormData');
+        }
+
+        const response = axiosInstance.patch(`/api/v1/product/update/${productId}`, productData);
+
+        toast.promise(response, {
+            loading: 'Updating product...',
+            error: (d) => d?.response?.data?.message || 'Error in Updating Product!',
+            success: () => 'Product Updated Successfully!',
+        });
+
+        return (await response)?.data;
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 const productSlice = createSlice({
     name: 'products',
     initialState,
