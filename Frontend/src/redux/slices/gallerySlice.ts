@@ -58,6 +58,22 @@ export const deleteImageById = createAsyncThunk('/gallery/delete/id', async func
     }
 })
 
+export const uploadGalleryImages = createAsyncThunk('/gallery/add', async function (formData: FormData) {
+    try {
+        const response = axiosInstance.post('/api/v1/gallery/add', formData)
+
+        toast.promise(response, {
+            loading: 'Uploading images...',
+            error: (d) => d?.response?.data?.message || 'Error in uploading images!',
+            success: (d) => d?.data?.message || 'Images uploaded successfully!',
+        })
+
+        return (await response)?.data
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 const gallerySlice = createSlice({
     name: 'gallery',
     initialState,
