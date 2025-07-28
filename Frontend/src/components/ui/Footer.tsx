@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Phone, Mail, MapPin, Globe, Linkedin, Twitter } from "lucide-react"
+import { Phone, Mail, MapPin, Globe, Linkedin, Twitter ,Instagram ,MailIcon} from "lucide-react"
 
 function Footer() {
   return (
@@ -22,15 +22,15 @@ function Footer() {
               practices.
             </p>
             <div className="flex space-x-4">
-              <Link to="#" className="text-gray-400 hover:text-white">
+              <Link to="https://www.linkedin.com/in/adityajagtap6672/" className="text-gray-400 hover:text-white">
                 <Linkedin className="w-5 h-5" />
               </Link>
-              <Link to="#" className="text-gray-400 hover:text-white">
-                <Twitter className="w-5 h-5" />
+              <Link to="https://www.instagram.com/omnexaglobaltrade/" className="text-gray-400 hover:text-white">
+                <Instagram className="w-5 h-5" />
               </Link>
-              <Link to="#" className="text-gray-400 hover:text-white">
+              {/* <Link to="#" className="text-gray-400 hover:text-white">
                 <Globe className="w-5 h-5" />
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -71,14 +71,14 @@ function Footer() {
             <h3 className="text-lg font-semibold mb-6">Our Products</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/products/jaggery" className="text-gray-400 hover:text-white">
+                <span className="text-gray-400 hover:text-white">
                   Natural Jaggery
-                </Link>
+                </span>
               </li>
               <li>
-                <Link to="/products/fried-onions" className="text-gray-400 hover:text-white">
+                <span className="text-gray-400 hover:text-white">
                   Fried Onions
-                </Link>
+                </span>
               </li>
               <li>
                 <span className="text-gray-400">More Products Coming Soon</span>
@@ -93,18 +93,20 @@ function Footer() {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-green-500 mt-1" />
                 <div className="text-gray-400">
-                  <div>123 Export Street</div>
-                  <div>Mumbai, Maharashtra 400001</div>
+                  {/* Row House,Unit No1,Galli
+ Number-2,Ganesh Park,Bondre Nagar,Fulewadi- 416010 */}
+                  <div>Row House Unit No-1 <br /> Ganesh Park, Bondre Nagar</div>
+                  <div>Fulewadi, Kolhapur, Maharashtra <br /> 416010</div>
                   <div>India</div>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-green-500" />
-                <span className="text-gray-400">+91-XXXX-XXXXXX</span>
+                <span className="text-gray-400">+91-9823496816</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-green-500" />
-                <span className="text-gray-400">info@omnexaglobal.com</span>
+                <MailIcon className="w-5 h-5 text-green-500" />
+                <span className="text-gray-400 break-all">aditya.jagptap@omnexaglobaltrade.com</span>
               </div>
             </div>
           </div>

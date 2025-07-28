@@ -7,6 +7,7 @@ import { Menu, X, Phone, Mail,  } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "@/redux/store"
 import { signout } from "@/redux/slices/authSlice"
+import logo from "../../assets/omnexa_logo.png"
 
 
 
@@ -39,11 +40,11 @@ export default function Header() {
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-2">
                 <Phone className="w-4 h-4" />
-                <span>+91-XXXX-XXXXXX</span>
+                <span>+91-</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="w-4 h-4" />
-                <span>info@omnexaglobal.com</span>
+                <span>aditya.jagptap@omnexaglobaltrade.com</span>
               </div>
             </div>
             <div className="hidden md:block">
@@ -58,7 +59,7 @@ export default function Header() {
         <div className="flex justify-between items-center py-4">
           <Link to="/" className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-green-700 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">O</span>
+              <span className="text-white font-bold text-xl"> <img src={logo} alt="logo" /></span>
             </div>
             <div>
               <div className="text-xl font-bold text-gray-900">Omnexa Global Trade</div>
