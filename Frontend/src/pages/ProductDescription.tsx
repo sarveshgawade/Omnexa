@@ -27,7 +27,11 @@ import {
   Zap,
   CheckCircle,
   Info,
+  Download,
 } from "lucide-react"
+
+// Import the brochure PDF
+import brochurePdf from '../assets/omnexa_brochure.pdf'
 
 
 function ProductDescription() {
@@ -35,6 +39,7 @@ function ProductDescription() {
   const {state} = useLocation()
   const dispatch = useDispatch<AppDispatch>()
   const {products, productDetails} = useSelector((state:RootState) => state.products)
+  const { role } = useSelector((state: RootState) => state.auth)
   const  productFromList = products.find( (p: Product) => p._id === state )
   const product : Product | undefined= productFromList || productDetails || undefined
 
@@ -42,6 +47,15 @@ function ProductDescription() {
 
   // const [selectedPackaging, setSelectedPackaging] = useState(product.packagingOptions[0])
 
+  // Function to handle brochure download
+  const handleDownloadBrochure = () => {
+    const link = document.createElement('a')
+    link.href = brochurePdf
+    link.download = 'Omnexa_Brochure.pdf'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   async function getProductDetails() {
     dispatch(getProduct(state))
@@ -197,7 +211,7 @@ function ProductDescription() {
 
 
             {/* Action Buttons */}
-            <div >
+            <div className="flex flex-col sm:flex-row gap-3">
               <Button
                 asChild
                 size="lg"
@@ -208,6 +222,20 @@ function ProductDescription() {
                   Request Quote
                 </Link>
               </Button>
+              
+              {/* Download Brochure Button - Only visible to users, not admins */}
+              {role === 'USER' && (
+                <Button
+
+                  onClick={handleDownloadBrochure}
+                  variant="outline"
+                  size="lg"
+                  className="flex-1 border-amber-600 text-amber-700 hover:bg-amber-50 shadow-lg cursor-pointer"
+                >
+                  <Download className="w-5 h-5 mr-2" />
+                  Download Brochure
+                </Button>
+              )}
               {/* <Button variant="outline" size="lg" className="flex-1 border-amber-600 text-amber-700 hover:bg-amber-50">
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 Add to Cart
